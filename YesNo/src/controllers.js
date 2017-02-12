@@ -1,20 +1,20 @@
-app.controller('MainCtrllr',function($scope,$location){
+angular.module('MyApp')
+.controller('MainCtrllr',function($scope,$http,$location){
 	$scope.acceptInput=false;
 	$scope.acceptInputChecked=false;
 	$scope.overallDataFetched=false;
+	$scope.detailedDataFetched={};
 	$scope.detailedDataFetched['country']=false;
 	$scope.detailedDataFetched['world']=false;
 	$scope.detailedDataFetched['user']=false;
 
-	$scope.input=false;
-
-	$http.get("/inputscr")
-	.success(function(data,status,headers,config) {
+	$http.get('/initApp')
+	.success(function(data) {
 		$scope.acceptInputChecked=true;
 		$scope.acceptInput=data.acceptInput;
 	})
-	.error(function(data,status,headers,config){
-		console.log("AJAX failed while checking");
+	.error(function(data){
+		console.log('AJAX failed while checking');
 	});
 
 	if($scope.acceptInput==true){
@@ -23,38 +23,46 @@ app.controller('MainCtrllr',function($scope,$location){
 	else{
 		$location.path='/home';
 	}
-});
+})
 
-app.controller("SendInputCtrllr",function($scope,$http,$location){
-	if($scope.acceptInput==false){
-		$http.post("/sendinput",{ 
-				input: $scope.input 
-				})
-		.success(function(data,status,headers,config){
-			$scope.acceptInput=true;
-
-			$scope.overallDataFetched=false;
-			$scope.detailedDataFetched['country']=false;
-			$scope.detailedDataFetched['world']=false;
-			$scope.detailedDataFetched['user']=false;
-		})
-		.error(function(data,status,headers,config){
-			console.log("AJAX failed while sending");
-		});
-	}
+.controller('SendInputCtrllr',function($scope,$http,$location){
 	if($scope.acceptInput==true){
 		$location.path='/overall';
 	}
-});
+	var sendInput=function(userResponse){	
+		if($scope.acceptInput==false){
+			$http.post('/sendinput',{ 
+					input: userResponse 
+					})
+			.success(function(data){
+				$scope.acceptInput=true;
+	
+				$scope.overallDataFetched=false;
+				$scope.detailedDataFetched['country']=false;
+				$scope.detailedDataFetched['world']=false;
+				$scope.detailedDataFetched['user']=false;
+			})
+			.error(function(data){
+				console.log('AJAX failed while sending');
+			});
+		}
+		if($scope.acceptInput==true){
+			$location.path='/overall';
+		}
+		else{
+			console.log('Response already recorded for today');
+		}
+	}
+})
 
-app.controller("OverallDataCtrllr",function($scope,$http){
+.controller('OverallDataCtrllr',function($scope,$http){
 	$scope.overallData.worldData.present=false;
 	$scope.overallData.countryData.present=false;
 	$scope.overallData.userData.present=false;
 
 	if($scope.overallDataFetched==false){
-		$http.get("/overallscr")
-		.success(function(data,status,headers,config){
+		$http.get('/overallscr')
+		.success(function(data){
 			$scope.overallData.worldData.present=true;
 			$scope.overallData.worldData.total=data.overallData.worldData.total;
 			$scope.overallData.worldData.yeses=data.overallData.worldData.yeses;
@@ -75,17 +83,17 @@ app.controller("OverallDataCtrllr",function($scope,$http){
 			}
 			$scope.overallDataFetched=true;
 		})
-		.error(function(data,status,headers,config){
-			console.log("AJAX failed getting overall data");
+		.error(function(data){
+			console.log('AJAX failed getting overall data');
 		});
 	}
 	
-});
+})
 
-app.controller("DetailedDataCtrler",function($scope,$http){
+.controller('DetailedDataCtrler',function($scope,$http){
 	if($scope.detailedDataFetched[$scope.detailedData.dataOf]==false){
-		$http.get("/detailedscr",{dataOf : $scope.detailedData.dataOf})
-		.success(function(data,status,headers,config){
+		$http.get('/detailedscr',{dataOf : $scope.detailedData.dataOf})
+		.success(function(data){
 			$scope.detailedDataFetched[$scope.detailedData.dataOf]=true;
 			$scope.detailedData.monthly.total=data.detailedData.monthly.total;
 			$scope.detailedData.monthly.yeses=data.detailedData.monthly.yeses;
@@ -99,8 +107,8 @@ app.controller("DetailedDataCtrler",function($scope,$http){
 			$scope.detailedData.hourly.yeses=data.detailedData.hourly.yeses;
 			$scope.detailedData.hourly.noes=data.detailedData.hourly.noes;
 		})
-		.error(function(data,status,headers,config){
-			console.log("AJAX failed getting detailed data");
+		.error(function(data){
+			console.log('AJAX failed getting detailed data');
 		});
 	}
 });
