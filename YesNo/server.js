@@ -31,7 +31,7 @@ app.get('/initApp',function(req,res){
 				console.log('error getting new id for user');
 			}
 			else{
-				if(rows.length){
+				if(rows.length==0){
 					userID=100;
 				}
 				else{
@@ -77,8 +77,30 @@ app.post('/sendinput',function(req,res){
 	}
 });
 
-app.get('',function(req,res){
-	
+app.get('/overall',function(req,res){
+	userId=req.cookies.userId;
+	userCountry=req.cookies.userCountry;
+	connection.query('SELECT Response, COUNT(Response) AS NumResponse FROM userresponses GROUP BY Response;',curDate,userId, function(err, rows, fields) {
+		if(err){
+			console.log('error while getting current reponse status');
+		}
+		else{
+			res.overallData.worldData.yeses=0;
+			res.overallData.worldData.noeses=0;
+			for(row in rows){
+				if(row.Response){
+					res.overallData.worldData.yeses=row.NumResponse;
+				}
+				if(!row.Response){
+					res.overallData.worldData.noes=row.NumResponse;
+				}
+			}
+			res.acceptInput=false;
+			if(rows.length>0){
+				res.acceptInput=true;
+			}
+		}
+	});
 	
 });
 
