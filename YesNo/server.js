@@ -26,7 +26,7 @@ app.get('/initApp',function(req,res){
 	userId=req.cookies.userId;
 	userCountry=req.cookies.userCountry;
 	if(userId or userCountry){
-		connection.query('SELECT MAX(User_Id) AS Max_Id from userresponses;',function(err,rows,fields){
+		connection.query('SELECT MAX(User_ID) AS Max_Id from userresponses;',function(err,rows,fields){
 			if(err){
 				console.log('error getting new id for user');
 			}
@@ -44,7 +44,7 @@ app.get('/initApp',function(req,res){
 		res.cookie('userCountry',userCountry);		
 	}
 	
-	connection.query('SELECT Resp_Date FROM userresponses WHERE Resp_Date>=? and User_Id=?;',curDate,userId, function(err, rows, fields) {
+	connection.query('SELECT Resp_Date FROM userresponses WHERE Resp_Date>=? and User_ID=?;',curDate,userId, function(err, rows, fields) {
 		if(err){
 			console.log('error while getting current reponse status');
 		}
@@ -59,12 +59,12 @@ app.get('/initApp',function(req,res){
 
 app.post('/sendinput',function(req,res){
 	if(!req.cookies.userId){
-		var query='INSERT INTO userresponses (Resp_Date,Resp_Time,User_Id,User_Country,Response) VALUES('
-				+ curDate + ',' 
-				+ curTime + ','
-				+ userId + ','
-				+ userCountry + ','
-				+ req.input + ');';
+		var query='INSERT INTO userresponses (Resp_Date,Resp_Time,User_ID,User_Country,Response) VALUES('
+				+ 'CURRENT_DATE' + ',' 
+				+ 'CURRENT_TIME' + ',"'
+				+ userId + '","'
+				+ userCountry + '","'
+				+ req.input + '");';
 		connection.query(query,function(err,rows,fields){
 			if(err){
 				console.log('error while inserting new response');
@@ -77,39 +77,164 @@ app.post('/sendinput',function(req,res){
 	}
 });
 
-app.get('/overall',function(req,res){
+app.get('/overallscr',function(req,res){
 	userId=req.cookies.userId;
 	userCountry=req.cookies.userCountry;
-	connection.query('SELECT Response, COUNT(Response) AS NumResponse FROM userresponses GROUP BY Response;',curDate,userId, function(err, rows, fields) {
+	
+	res.overallData.worldData.present=false;
+	res.overallData.countryData.present=false;
+	res.overallData.userData.present=false;
+	query_select='SELECT Response, COUNT(Response) AS NumResponse FROM userresponses ';
+	query_groupby=' GROUP BY Response;';
+	connection.query(query_select + query_groupby, function(err, rows, fields) {
 		if(err){
-			console.log('error while getting current reponse status');
+			console.log('error while getting world totals');
 		}
 		else{
+			res.overallData.worldData.present=true;
 			res.overallData.worldData.yeses=0;
 			res.overallData.worldData.noeses=0;
 			for(row in rows){
 				if(row.Response){
 					res.overallData.worldData.yeses=row.NumResponse;
 				}
-				if(!row.Response){
+				else{
 					res.overallData.worldData.noes=row.NumResponse;
 				}
 			}
-			res.acceptInput=false;
-			if(rows.length>0){
-				res.acceptInput=true;
+		}
+	});
+	if(userCountry){
+		query_where='WHERE User_Country = ' + userCountry;
+		connection.query(query_select + query_where + query_groupby, function(err, rows, fields) {
+			if(err){
+				console.log('error while getting country totals');
+			}
+			else{
+				res.overallData.countryData.present=true;
+				res.overallData.countryData.yeses=0;
+				res.overallData.countryData.noeses=0;
+				for(row in rows){
+					if(row.Response){
+						res.overallData.countryData.yeses=row.NumResponse;
+					}
+					else{
+						res.overallData.countryData.noes=row.NumResponse;
+					}
+				}
+			}
+		});
+	}
+	
+	if(userId){
+		query_where='WHERE User_ID = ' + userId;
+		connection.query(query_select + query_where + query_groupby, function(err, rows, fields) {
+			if(err){
+				console.log('error while getting user totals');
+			}
+			else{
+				res.overallData.userData.present=true;
+				res.overallData.userData.yeses=0;
+				res.overallData.userData.noeses=0;
+				for(row in rows){
+					if(row.Response){
+						res.overallData.userData.yeses=row.NumResponse;
+					}
+					else{
+						res.overallData.userData.noes=row.NumResponse;
+					}
+				}
+			}
+		});
+	}
+	
+});
+
+app.get('/detailedscr',function(req,res){
+	userId=req.cookies.userId;
+	userCountry=req.cookies.userCountry;
+	
+	if(req.dataOf=='world'){
+		query_where='';
+	}else if(req.dataOf=='country'){
+		query_where='WHERE User_Country = ' + userCountry;
+	}
+	else if(req.dataOf=='user'){
+		query_where='WHERE User_ID = ' + userId;
+	}
+	
+	query_select='SELECT ?, Response, COUNT(Response) AS NumResponse FROM userresponses ';
+	query_groupby=' GROUP BY Response, ?;';
+	
+	connection.query(query_select + query_where + query_groupby ,'MONTH(Resp_Date) AS Month', 'MONTH(Resp_Date)', function(err, rows, fields) {
+		if(err){
+			console.log('error while getting monthly detailed');
+		}
+		else{
+			for(i in {1,2,3,4,5,6,7,8,9,10,11,12}){
+				res.detailedData.monthly[i].yeses=0;
+				res.detailedData.monthly[i].noeses=0;
+			}
+			for(row in rows){
+				if(row.Response){
+					res.detailedData.monthly[row.Month].yeses=row.NumResponse;
+				}
+				else{
+					res.detailedData.monthly[row.Month].noes=row.NumResponse;
+				}
+			}
+		}
+	});
+	
+	connection.query(query_select + query_where + query_groupby ,'WEEKDAY(Resp_Date) AS WeekDay', 'WEEKDAY(Resp_Date)', function(err, rows, fields) {
+		if(err){
+			console.log('error while getting weekly detailed');
+		}
+		else{
+			for(i in {0,1,2,3,4,5,6}){
+				res.detailedData.weekly[i].yeses=0;
+				res.detailedData.weekly[i].noeses=0;
+			}
+			for(row in rows){
+				if(row.Response){
+					res.detailedData.weekly[row.WeekDay].yeses=row.NumResponse;
+				}
+				else{
+					res.detailedData.weekly[row.WeekDay].noes=row.NumResponse;
+				}
+			}
+		}
+	});
+	
+	connection.query(query_select + query_where + query_groupby ,'HOUR(Resp_Time) AS Hour', 'HOUR(Resp_Time)', function(err, rows, fields) {
+		if(err){
+			console.log('error while getting hourly detailed');
+		}
+		else{
+			for(i in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23}){
+				res.detailedData.hourly[i].yeses=0;
+				res.detailedData.hourly[i].noeses=0;
+			}
+			for(row in rows){
+				if(row.Response){
+					res.detailedData.hourly[row.Hour].yeses=row.NumResponse;
+				}
+				else{
+					res.detailedData.hourly[row.Hour].noes=row.NumResponse;
+				}
 			}
 		}
 	});
 	
 });
 
-
 connection.end(function (err){
 	if(err){
 		console.log('error while ending connection');
 	}
-	console.log('connection ended successfully');
+	else{
+		console.log('connection ended successfully');
+	}
 });
 
 var server = app.listen(8081, function () {

@@ -64,20 +64,17 @@ angular.module('MyApp')
 		$http.get('/overallscr')
 		.success(function(data){
 			$scope.overallData.worldData.present=true;
-			$scope.overallData.worldData.total=data.overallData.worldData.total;
 			$scope.overallData.worldData.yeses=data.overallData.worldData.yeses;
 			$scope.overallData.worldData.noes=data.overallData.worldData.noes;
 
 			if(data.overallData.countryData.present==true){
 				$scope.overallData.countryData.present=true;
-				$scope.overallData.countryData.total=data.overallData.countryData.total;
 				$scope.overallData.countryData.yeses=data.overallData.countryData.yeses;
 				$scope.overallData.countryData.noes=data.overallData.countryData.noes;
 			}
 
-			if(data.overallData.userData.Present==true){
+			if(data.overallData.userData.present==true){
 				$scope.overallData.userData.present=true;
-				$scope.overallData.userData.total=data.overallData.userData.total;
 				$scope.overallData.userData.yeses=data.overallData.userData.yeses;
 				$scope.overallData.userData.noes=data.overallData.userData.noes;
 			}
@@ -95,15 +92,12 @@ angular.module('MyApp')
 		$http.get('/detailedscr',{dataOf : $scope.detailedData.dataOf})
 		.success(function(data){
 			$scope.detailedDataFetched[$scope.detailedData.dataOf]=true;
-			$scope.detailedData.monthly.total=data.detailedData.monthly.total;
 			$scope.detailedData.monthly.yeses=data.detailedData.monthly.yeses;
 			$scope.detailedData.monthly.noes=data.detailedData.monthly.noes;
 
-			$scope.detailedData.weekly.total=data.detailedData.weekly.total;
 			$scope.detailedData.weekly.yeses=data.detailedData.weekly.yeses;
 			$scope.detailedData.weekly.noes=data.detailedData.weekly.noes;
 
-			$scope.detailedData.hourly.total=data.detailedData.hourly.total;
 			$scope.detailedData.hourly.yeses=data.detailedData.hourly.yeses;
 			$scope.detailedData.hourly.noes=data.detailedData.hourly.noes;
 		})
