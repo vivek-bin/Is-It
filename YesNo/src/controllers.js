@@ -64,19 +64,19 @@ angular.module('MyApp')
 		$http.get('/overallscr')
 		.success(function(data){
 			$scope.overallData.worldData.present=true;
-			$scope.overallData.worldData.yeses=data.overallData.worldData.yeses;
-			$scope.overallData.worldData.noes=data.overallData.worldData.noes;
+			$scope.overallData.worldData.yeses=data.overallData.worldData[true];
+			$scope.overallData.worldData.noes=data.overallData.worldData[false];
 
 			if(data.overallData.countryData.present==true){
 				$scope.overallData.countryData.present=true;
-				$scope.overallData.countryData.yeses=data.overallData.countryData.yeses;
-				$scope.overallData.countryData.noes=data.overallData.countryData.noes;
+				$scope.overallData.countryData.yeses=data.overallData.countryData[true];
+				$scope.overallData.countryData.noes=data.overallData.countryData[false];
 			}
 
 			if(data.overallData.userData.present==true){
 				$scope.overallData.userData.present=true;
-				$scope.overallData.userData.yeses=data.overallData.userData.yeses;
-				$scope.overallData.userData.noes=data.overallData.userData.noes;
+				$scope.overallData.userData.yeses=data.overallData.userData[true];
+				$scope.overallData.userData.noes=data.overallData.userData[false];
 			}
 			$scope.overallDataFetched=true;
 		})
@@ -87,22 +87,23 @@ angular.module('MyApp')
 	
 })
 
-.controller('DetailedDataCtrler',function($scope,$http){
+.controller('DetailedDataCtrller',function($scope,$http){
 	if($scope.detailedDataFetched[$scope.detailedData.dataOf]==false){
 		$http.get('/detailedscr',{dataOf : $scope.detailedData.dataOf})
 		.success(function(data){
 			$scope.detailedDataFetched[$scope.detailedData.dataOf]=true;
-			$scope.detailedData.monthly.yeses=data.detailedData.monthly.yeses;
-			$scope.detailedData.monthly.noes=data.detailedData.monthly.noes;
+			$scope.detailedData.monthly.yeses=data.detailedData.monthly[true];
+			$scope.detailedData.monthly.noes=data.detailedData.monthly[false];
 
-			$scope.detailedData.weekly.yeses=data.detailedData.weekly.yeses;
-			$scope.detailedData.weekly.noes=data.detailedData.weekly.noes;
+			$scope.detailedData.weekly.yeses=data.detailedData.weekly[true];
+			$scope.detailedData.weekly.noes=data.detailedData.weekly[false];
 
-			$scope.detailedData.hourly.yeses=data.detailedData.hourly.yeses;
-			$scope.detailedData.hourly.noes=data.detailedData.hourly.noes;
+			$scope.detailedData.hourly.yeses=data.detailedData.hourly[true];
+			$scope.detailedData.hourly.noes=data.detailedData.hourly[false];
 		})
 		.error(function(data){
 			console.log('AJAX failed getting detailed data');
 		});
 	}
 });
+

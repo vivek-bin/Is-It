@@ -2,19 +2,19 @@ angular.module('MyApp')
 .config(['$routeProvider',function($routeProvider){
 	$routeProvider
 	.when('/home',{
-		templateURL:'./views/input.html',
+		templateURL:'/views/input.html',
 		controller:'SendInputCtrllr'
 	})
 	.when('/overall',{
-		templateURL:'./views/overall.html',
+		templateURL:'/views/overall.html',
 		controller:'OverallDataCtrllr'
 	})
 	.when('/detailed',{
-		templateURL:'./views/detailed.html',
+		templateURL:'/views/detailed.html',
 		controller:'DetailedDataCtrllr'
 	})
 	.otherwise({
-		redirect:'/input'
+		redirect:'/home'
 	});
 
 }]);
