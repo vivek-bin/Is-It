@@ -1,21 +1,21 @@
 angular.module('MyApp')
-.config(['$routeProvider',function($routeProvider){
+.config(['$routeProvider','$locationProvider',function($routeProvider,$locationProvider){
 	$routeProvider
-	.when('/home',{
-		templateURL:'/views/input.html',
+	.when('/',{
+		templateUrl:'/views/input.html',
 		controller:'SendInputCtrllr'
 	})
 	.when('/overall',{
-		templateURL:'/views/overall.html',
+		templateUrl:'/views/overall.html',
 		controller:'OverallDataCtrllr'
 	})
 	.when('/detailed',{
-		templateURL:'/views/detailed.html',
+		templateUrl:'/views/detailed.html',
 		controller:'DetailedDataCtrllr'
 	})
 	.otherwise({
-		redirect:'/home'
+		redirectTo:'/'
 	});
-
+	$locationProvider.html5Mode(true);
 }]);
 

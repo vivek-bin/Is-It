@@ -1,1 +1,1 @@
-angular.module('MyApp',['ngRoute','ngAnimate']);
+angular.module('MyApp',['ng-fusioncharts','ngRoute','ngAnimate']);

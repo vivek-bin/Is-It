@@ -12,17 +12,14 @@ angular.module('MyApp')
 	.success(function(data) {
 		$scope.acceptInputChecked=true;
 		$scope.acceptInput=data.acceptInput;
+		if($scope.acceptInput){
+			$location.path='/overall';
+		}
 	})
 	.error(function(data){
 		console.log('AJAX failed while checking');
 	});
 
-	if($scope.acceptInput==true){
-		$location.path='/overall';
-	}
-	else{
-		$location.path='/home';
-	}
 })
 
 .controller('SendInputCtrllr',function($scope,$http,$location){
@@ -87,7 +84,7 @@ angular.module('MyApp')
 	
 })
 
-.controller('DetailedDataCtrller',function($scope,$http){
+.controller('DetailedDataCtrllr',function($scope,$http){
 	if($scope.detailedDataFetched[$scope.detailedData.dataOf]==false){
 		$http.get('/detailedscr',{dataOf : $scope.detailedData.dataOf})
 		.success(function(data){
@@ -105,5 +102,27 @@ angular.module('MyApp')
 			console.log('AJAX failed getting detailed data');
 		});
 	}
-});
+})
 
+.controller('GraphingCtrllr', function ($scope) {
+	$scope.myDataSource = {
+		chart: {
+				caption: "Harry's SuperMart",
+				subCaption: "Top 5 stores in last month by revenue",
+			},
+			data:[{
+				label: "Bakersfield Central",
+				value: "880000"
+			},
+			{
+				label: "Garden Groove harbour",
+				value: "730000"
+			},
+			{
+				label: "Daly City Serramonte",
+				value: "330000"
+		}]
+	};
+});
+			
+			
