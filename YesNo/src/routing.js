@@ -14,8 +14,8 @@ angular.module('MyApp')
 		controller:'DetailedDataCtrllr'
 	})
 	.otherwise({
-		redirectTo:'/'
+		redirectTo:'/overall'
 	});
-	$locationProvider.html5Mode(true);
+	$locationProvider.hashPrefix('');
 }]);
 

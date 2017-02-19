@@ -1,7 +1,5 @@
-<!DOCTYPE html>
 <html>
 <head>
-<base href="/" />
 <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js'></script>
 <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-route.min.js'></script>
 <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-cookies.min.js'></script>
@@ -11,19 +9,20 @@
 
 <script src='src/common-script.js'></script>
 
+<script src='src/services.js'></script>
 <script src='src/controllers.js'></script>
 <script src='src/routing.js'></script>
 
 <link rel='stylesheet' type='text/css' href='style/styles.css' />
 
 </head>
-<body ng-app='MyApp' ng-controller='MainCtrllr'>
+<body ng-app='MyApp'>
 
 <div class='heading'>
-<a href='/overall'>Is it?</a>
+<a href='#overall'>Is it?</a>
 </div>
 
-<div ng-view>
+<div ng-view class='main-body'>
 </div>
 
 <div class='footer'>

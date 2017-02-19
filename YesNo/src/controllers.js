@@ -1,110 +1,76 @@
 angular.module('MyApp')
-.controller('MainCtrllr',function($scope,$http,$location){
-	$scope.acceptInput=false;
-	$scope.acceptInputChecked=false;
-	$scope.overallDataFetched=false;
-	$scope.detailedDataFetched={};
-	$scope.detailedDataFetched['country']=false;
-	$scope.detailedDataFetched['world']=false;
-	$scope.detailedDataFetched['user']=false;
-
-	$http.get('/initApp')
-	.success(function(data) {
-		$scope.acceptInputChecked=true;
-		$scope.acceptInput=data.acceptInput;
-		if($scope.acceptInput){
-			$location.path='/overall';
-		}
-	})
-	.error(function(data){
+.controller('SendInputCtrllr',function($scope,$http,InputService){
+	console.log('in send ip ctrllr')
+	
+	$http.get('/checkresponse')
+	.then(function(res){
+		console.log(res.data.acceptInput)
+		InputService.acceptInput=res.data.acceptInput;
+		InputService.acceptInputChecked=true;
+	}
+	,function(error){
 		console.log('AJAX failed while checking');
-	});
-
-})
-
-.controller('SendInputCtrllr',function($scope,$http,$location){
-	if($scope.acceptInput==true){
-		$location.path='/overall';
-	}
-	var sendInput=function(userResponse){	
-		if($scope.acceptInput==false){
-			$http.post('/sendinput',{ 
-					input: userResponse 
+	})
+	
+	$scope.sendInput=function(userResponse){
+		console.log('sending response ' + InputService.acceptInput + InputService.acceptInputChecked);
+		if((! InputService.acceptInput) && (InputService.acceptInputChecked)){
+			console.log('sending response ');
+			$http.post('/sendinput',{
+					'userResponse' : userResponse 
 					})
-			.success(function(data){
-				$scope.acceptInput=true;
-	
-				$scope.overallDataFetched=false;
-				$scope.detailedDataFetched['country']=false;
-				$scope.detailedDataFetched['world']=false;
-				$scope.detailedDataFetched['user']=false;
-			})
-			.error(function(data){
+			.then(function(data){
+				InputService.acceptInput=true;
+			}
+			,function(error){
 				console.log('AJAX failed while sending');
-			});
-		}
-		if($scope.acceptInput==true){
-			$location.path='/overall';
-		}
-		else{
-			console.log('Response already recorded for today');
+			})
 		}
 	}
 })
 
-.controller('OverallDataCtrllr',function($scope,$http){
-	$scope.overallData.worldData.present=false;
-	$scope.overallData.countryData.present=false;
-	$scope.overallData.userData.present=false;
-
-	if($scope.overallDataFetched==false){
+.controller('OverallDataCtrllr',function($scope,$http,OverallDataService){
+	console.log('in overall data ctrllr');
+	if(! OverallDataService.overallData.present){
 		$http.get('/overallscr')
-		.success(function(data){
-			$scope.overallData.worldData.present=true;
-			$scope.overallData.worldData.yeses=data.overallData.worldData[true];
-			$scope.overallData.worldData.noes=data.overallData.worldData[false];
-
-			if(data.overallData.countryData.present==true){
-				$scope.overallData.countryData.present=true;
-				$scope.overallData.countryData.yeses=data.overallData.countryData[true];
-				$scope.overallData.countryData.noes=data.overallData.countryData[false];
-			}
-
-			if(data.overallData.userData.present==true){
-				$scope.overallData.userData.present=true;
-				$scope.overallData.userData.yeses=data.overallData.userData[true];
-				$scope.overallData.userData.noes=data.overallData.userData[false];
-			}
-			$scope.overallDataFetched=true;
-		})
-		.error(function(data){
+		.then(function(data){
+			OverallDataService.overallData=data.overallData;
+		}
+		,function(error){
 			console.log('AJAX failed getting overall data');
-		});
+		})
 	}
-	
+	$scope.overallData=OverallDataService.overallData;
 })
 
-.controller('DetailedDataCtrllr',function($scope,$http){
-	if($scope.detailedDataFetched[$scope.detailedData.dataOf]==false){
+.controller('DetailedDataCtrllr',function($scope,$http,DetailedDataService){
+	console.log('in detail data ctrllr');
+	
+	if(! DetailedDataService.categoryGet($scope.detailedData.dataOf).detailedData.present){
 		$http.get('/detailedscr',{dataOf : $scope.detailedData.dataOf})
-		.success(function(data){
-			$scope.detailedDataFetched[$scope.detailedData.dataOf]=true;
-			$scope.detailedData.monthly.yeses=data.detailedData.monthly[true];
-			$scope.detailedData.monthly.noes=data.detailedData.monthly[false];
-
-			$scope.detailedData.weekly.yeses=data.detailedData.weekly[true];
-			$scope.detailedData.weekly.noes=data.detailedData.weekly[false];
-
-			$scope.detailedData.hourly.yeses=data.detailedData.hourly[true];
-			$scope.detailedData.hourly.noes=data.detailedData.hourly[false];
+		.then(function(data){
+			if($scope.detailedData.dataOf=='world'){
+				DetailedDataService.worldData.present=true;
+				DetailedDataService.worldData.detailedData=data.detailedData;
+			}
+			if($scope.detailedData.dataOf=='country'){
+				DetailedDataService.countryData.present=true;
+				DetailedDataService.countryData.detailedData=data.detailedData;
+			}
+			if($scope.detailedData.dataOf=='user'){
+				DetailedDataService.userData.present=true;
+				DetailedDataService.userData.detailedData=data.detailedData;
+			}
+		}
+		,function(error){
+			console.log('AJAX failed getting detailed data')
 		})
-		.error(function(data){
-			console.log('AJAX failed getting detailed data');
-		});
 	}
+	$scope.detailedData=DetailedDataService.categoryGet($scope.detailedData.dataOf)
 })
 
 .controller('GraphingCtrllr', function ($scope) {
+	console.log('in graph ctrllr')
 	$scope.myDataSource = {
 		chart: {
 				caption: "Harry's SuperMart",
@@ -122,7 +88,6 @@ angular.module('MyApp')
 				label: "Daly City Serramonte",
 				value: "330000"
 		}]
-	};
+	}
 });
-			
-			
+

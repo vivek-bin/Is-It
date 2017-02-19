@@ -1,16 +1,18 @@
 var express=require('express')
 var cookieParser=require('cookie-parser')
 var mysql=require('mysql')
+var bodyParser=require('body-parser');
 
 var app=express()
 app.use(cookieParser())
+app.use(bodyParser.json());
 
 app.use(function(req,res,next){
 	if(!req.cookies.userId){
 		var connection = mysql.createConnection({
 		  host: 'localhost',
 		  port: '3306',
-		  user: 'root',
+		  user: 'IsIt',
 		  password: 'mysql',
 		  database: 'db1'
 		})
@@ -54,32 +56,27 @@ app.use(function(req,res,next){
 	}
 })
 
-app.get('/initApp',function(req,res){
-//check if user has responded for today
+app.get('/checkresponse',function(req,res){
+	//check if user has responded for today
 	console.log('in initapp path    '+req.cookies.userCountry+'    '+req.cookies.userId)
 
 	var connection = mysql.createConnection({
 	  host: 'localhost',
 	  port: '3306',
-	  user: 'root',
+	  user: 'IsIt',
 	  password: 'mysql',
 	  database: 'db1'
 	})
-
-	connection.connect(function(err) {
+	connection.connect(function(err){
 		if (err) console.log('error connecting...')
 		else console.log('You are now connected...')
 	})
-
-	connection.query('SELECT Resp_Date FROM userresponses WHERE Resp_Date >= CURRENT_DATE and User_ID = '+ req.cookies.userId +';', function(err, rows, fields) {
+	connection.query('SELECT Resp_Date FROM userresponses WHERE Resp_Date>=CURRENT_DATE and User_ID='+req.cookies.userId+';',function(err, rows, fields) {
 		if(err){
 			console.log('error while getting current reponse status')
 		}
 		else{
-			res.acceptInput=false
-			if(rows.length>0){
-				res.acceptInput=true
-			}
+			res.send({acceptInput: (rows.length>0)})
 		}
 		connection.end(function (err){
 			if(err)		console.log('error while ending connection')
@@ -95,7 +92,7 @@ app.post('/sendinput',function(req,res){
 		var connection = mysql.createConnection({
 		  host: 'localhost',
 		  port: '3306',
-		  user: 'root',
+		  user: 'IsIt',
 		  password: 'mysql',
 		  database: 'db1'
 		})
@@ -104,19 +101,21 @@ app.post('/sendinput',function(req,res){
 			if (err) console.log('error connecting...')
 			else console.log('You are now connected...')
 		})
-		
+		console.log(req.body);
 		var query='INSERT INTO userresponses (Resp_Date,Resp_Time,User_ID,User_Country,Response) VALUES('
 				+ 'CURRENT_DATE' + ',' 
 				+ 'CURRENT_TIME' + ',"'
 				+ req.cookies.userId + '","'
-				+ req.cookies.userCountry + '","'
-				+ req.input + '");'
+				+ req.cookies.userCountry + '",'
+				+ req.body.userResponse + ');'
+		console.log(query);
 		connection.query(query,function(err,rows,fields){
 			if(err){
 				console.log('error while inserting new response')
 			}
 			else{
 				console.log('reponse recorded')
+				res.end()
 			}
 			connection.end(function (err){
 				if(err)		console.log('error while ending connection')
@@ -129,9 +128,13 @@ app.post('/sendinput',function(req,res){
 app.get('/overallscr',function(req,res){
 	console.log('in overall path')
 	
-	res.overallData.worldData.present=false
-	res.overallData.countryData.present=false
-	res.overallData.userData.present=false
+	res.overallData={
+		present: false,
+		worldData: {},
+		countryData: {},
+		userData: {}	
+	};
+	
 	query_select='SELECT Response, COUNT(Response) AS NumResponse FROM userresponses '
 	query_groupby=' GROUP BY Response;'
 	
@@ -140,7 +143,7 @@ app.get('/overallscr',function(req,res){
 	var connection = mysql.createConnection({
 	  host: 'localhost',
 	  port: '3306',
-	  user: 'root',
+	  user: 'IsIt',
 	  password: 'mysql',
 	  database: 'db1'
 	})
@@ -150,18 +153,21 @@ app.get('/overallscr',function(req,res){
 		else console.log('You are now connected...')
 	})
 	
-	
+	var queryCompleted=0;
 	connection.query(query_select + query_where + query_groupby, function(err, rows, fields) {
 		if(err){
 			console.log('error while getting world totals')
 		}
 		else{
-			res.overallData.worldData.present=true
-			res.overallData.worldData[true]=0
-			res.overallData.worldData[false]=0
-			for(row in rows){
-				res.overallData.worldData[row.Response]=row.NumResponse
-			}
+			res.overallData.present=true;
+			res.overallData.worldData=rows;
+		}
+		++queryCompleted;
+		if(qyeryCompleted>=3){
+			connection.end(function (err){
+				if(err)		console.log('error while ending connection')
+				else		console.log('connection ended successfully')
+			})
 		}
 	})
 	
@@ -172,12 +178,15 @@ app.get('/overallscr',function(req,res){
 				console.log('error while getting country totals')
 			}
 			else{
-				res.overallData.countryData.present=true
-				res.overallData.countryData[true]=0
-				res.overallData.countryData[false]=0
-				for(row in rows){
-					res.overallData.countryData[row.Response]=row.NumResponse
-				}
+				res.overallData.present=true;
+				res.overallData.countryData=rows;
+			}
+			++queryCompleted;
+			if(qyeryCompleted>=3){
+				connection.end(function (err){
+					if(err)		console.log('error while ending connection')
+					else		console.log('connection ended successfully')
+				})
 			}
 		})
 	}
@@ -189,20 +198,18 @@ app.get('/overallscr',function(req,res){
 				console.log('error while getting user totals')
 			}
 			else{
-				res.overallData.userData.present=true;
-				res.overallData.userData[true]=0
-				res.overallData.userData[false]=0
-				for(row in rows){
-					res.overallData.userData[row.Response]=row.NumResponse
-				}
+				res.overallData.present=true;
+				res.overallData.userData=rows;
 			}
-			connection.end(function (err){
-				if(err)		console.log('error while ending connection')
-				else		console.log('connection ended successfully')
-			})
+			++queryCompleted;
+			if(qyeryCompleted>=3){
+				connection.end(function (err){
+					if(err)		console.log('error while ending connection')
+					else		console.log('connection ended successfully')
+				})
+			}
 		})
 	}
-	
 })
 
 app.get('/detailedscr',function(req,res){
@@ -217,23 +224,17 @@ app.get('/detailedscr',function(req,res){
 		query_where='WHERE User_ID = "' + req.cookies.userId + '"'
 	}
 	
-	for(var i=1;i<=12;++i){
-		res.detailedData.monthly[i][0]=0
-		res.detailedData.monthly[i][1]=0
-	}
-	for(var i=0;i<7;++i){
-		res.detailedData.weekly[i][0]=0
-		res.detailedData.weekly[i][1]=0
-	}
-	for(var i=0;i<24;++i){
-		res.detailedData.hourly[i][0]=0
-		res.detailedData.hourly[i][1]=0
-	}
+	res.detailedData={
+		present: false,
+		monthly: {},
+		weekly: {},
+		hourly: {}
+	};
 	
 	var connection = mysql.createConnection({
 	  host: 'localhost',
 	  port: '3306',
-	  user: 'root',
+	  user: 'IsIt',
 	  password: 'mysql',
 	  database: 'db1'
 	})
@@ -244,15 +245,20 @@ app.get('/detailedscr',function(req,res){
 	
 	query_select='SELECT ?, Response, COUNT(Response) AS NumResponse FROM userresponses '
 	query_groupby=' GROUP BY Response, ?;'
-	
+	var queryCompleted=0;
 	connection.query(query_select + query_where + query_groupby ,'MONTH(Resp_Date) AS Month', 'MONTH(Resp_Date)', function(err, rows, fields) {
 		if(err){
 			console.log('error while getting monthly detailed')
 		}
 		else{
-			for(row in rows){
-				res.detailedData.monthly[row.Month][row.Response]=row.NumResponse
-			}
+			res.detailedData.monthly=rows;
+		}
+		++queryCompleted;
+		if(queryCompleted>=3){
+			connection.end(function (err){
+			if(err)		console.log('error while ending connection')
+			else		console.log('connection ended successfully')
+			})
 		}
 	})
 	
@@ -261,9 +267,14 @@ app.get('/detailedscr',function(req,res){
 			console.log('error while getting weekly detailed')
 		}
 		else{
-			for(row in rows){
-				res.detailedData.weekly[row.WeekDay][row.Response]=row.NumResponse
-			}
+			res.detailedData.weekly=rows;
+		}
+		++queryCompleted;
+		if(queryCompleted>=3){
+			connection.end(function (err){
+			if(err)		console.log('error while ending connection')
+			else		console.log('connection ended successfully')
+			})
 		}
 	})
 	
@@ -272,26 +283,25 @@ app.get('/detailedscr',function(req,res){
 			console.log('error while getting hourly detailed')
 		}
 		else{
-			for(row in rows){
-				res.detailedData.hourly[row.Hour][row.Response]=row.NumResponse
-			}
-	
+			res.detailedData.hourly=rows;
 		}
-		connection.end(function (err){
+		++queryCompleted;
+		if(queryCompleted>=3){
+			connection.end(function (err){
 			if(err)		console.log('error while ending connection')
 			else		console.log('connection ended successfully')
-		})
+			})
+		}
 	})
-	
 })
 
 app.get('/',function(req,res){
-	console.log('in home path')
+//	console.log('in home path'+__dirname + "/main.html")
 	res.sendFile(__dirname + "/main.html")
 })
 
 app.get('*',function(req,res){
-	console.log('in '+ __dirname + req.path +' path')
+//	console.log('in '+ __dirname + req.path +' path')
 	res.sendFile(__dirname + req.path)
 })
 

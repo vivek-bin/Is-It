@@ -2,18 +2,18 @@
 	position: fixed;
 	top: 0;
 	left: 50%;
+	transform: translateX(-50%);
 	text-shadow: 1px 1px 8px #fff, -1px -1px 5px #222;
 	font-size:300%;
-	transform: translateX(-50%);
 }
 
 .footer{
 	position: fixed;
 	bottom: 0;
 	left: 50%;
+	transform: translateX(-50%);
 	font-size:60%;
 	color: #131;
-	transform: translateX(-50%);
 }
 
 .response-box{
@@ -22,4 +22,10 @@
 	transform: translateY(-50%);
 	background-color: #999;
 	margin: 5px 20px;
+}
+
+.main-body{
+	position: fixed;
+	top: 10%;
+	height: 80%;
 }
