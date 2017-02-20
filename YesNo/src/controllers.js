@@ -1,5 +1,5 @@
 angular.module('MyApp')
-.controller('SendInputCtrllr',function($scope,$http,InputService){
+.controller('SendInputCtrllr',function($scope,$http,$location,InputService){
 	console.log('in send ip ctrllr')
 	
 	$http.get('/checkresponse')
@@ -7,6 +7,9 @@ angular.module('MyApp')
 		console.log(res.data.acceptInput)
 		InputService.acceptInput=res.data.acceptInput;
 		InputService.acceptInputChecked=true;
+		if(InputService.acceptInput){
+			$location.path('/overall')
+		}
 	}
 	,function(error){
 		console.log('AJAX failed while checking');
@@ -19,8 +22,9 @@ angular.module('MyApp')
 			$http.post('/sendinput',{
 					'userResponse' : userResponse 
 					})
-			.then(function(data){
+			.then(function(res){
 				InputService.acceptInput=true;
+				$location.path('/overall')
 			}
 			,function(error){
 				console.log('AJAX failed while sending');
@@ -33,14 +37,13 @@ angular.module('MyApp')
 	console.log('in overall data ctrllr');
 	if(! OverallDataService.overallData.present){
 		$http.get('/overallscr')
-		.then(function(data){
-			OverallDataService.overallData=data.overallData;
+		.then(function(res){
+			OverallDataService.overallData=res.data.overallData;
 		}
 		,function(error){
 			console.log('AJAX failed getting overall data');
 		})
 	}
-	$scope.overallData=OverallDataService.overallData;
 })
 
 .controller('DetailedDataCtrllr',function($scope,$http,DetailedDataService){
@@ -48,46 +51,79 @@ angular.module('MyApp')
 	
 	if(! DetailedDataService.categoryGet($scope.detailedData.dataOf).detailedData.present){
 		$http.get('/detailedscr',{dataOf : $scope.detailedData.dataOf})
-		.then(function(data){
+		.then(function(res){
 			if($scope.detailedData.dataOf=='world'){
 				DetailedDataService.worldData.present=true;
-				DetailedDataService.worldData.detailedData=data.detailedData;
+				DetailedDataService.worldData.detailedData=res.data.detailedData;
 			}
 			if($scope.detailedData.dataOf=='country'){
 				DetailedDataService.countryData.present=true;
-				DetailedDataService.countryData.detailedData=data.detailedData;
+				DetailedDataService.countryData.detailedData=res.data.detailedData;
 			}
 			if($scope.detailedData.dataOf=='user'){
 				DetailedDataService.userData.present=true;
-				DetailedDataService.userData.detailedData=data.detailedData;
+				DetailedDataService.userData.detailedData=res.data.detailedData;
 			}
 		}
 		,function(error){
 			console.log('AJAX failed getting detailed data')
 		})
 	}
-	$scope.detailedData=DetailedDataService.categoryGet($scope.detailedData.dataOf)
 })
 
-.controller('GraphingCtrllr', function ($scope) {
+.controller('GraphingCtrllr', function ($scope,OverallDataService) {
 	console.log('in graph ctrllr')
-	$scope.myDataSource = {
+	
+	$scope.worldDataSource = {
 		chart: {
-				caption: "Harry's SuperMart",
-				subCaption: "Top 5 stores in last month by revenue",
+				caption: "World",
 			},
 			data:[{
-				label: "Bakersfield Central",
-				value: "880000"
+				label: "Nothin'",
+				value: 0.00001
+			}]
+	}
+	$scope.countryDataSource = {
+		chart: {
+				caption: "Country",
 			},
-			{
-				label: "Garden Groove harbour",
-				value: "730000"
+			data:[{
+				label: "Nothin'",
+				value: 0.00001
+			}]
+	}
+	$scope.userDataSource = {
+		chart: {
+				caption: "User",
 			},
-			{
-				label: "Daly City Serramonte",
-				value: "330000"
-		}]
+			data:[{
+				label: "Nothin'",
+				value: 0.00001
+			}]
+	}
+	
+	$scope.populateData=function(){
+		$scope.worldDataSource.data=[];
+		for(var responseObj of OverallDataService.overallData.worldData){
+			$scope.worldDataSource.data.push({
+				label: (responseObj.Response?"YES":"NO"),
+				value: responseObj.NumResponse
+			})
+		}
+		$scope.countryDataSource.data=[];
+		for(var responseObj of OverallDataService.overallData.countryData){
+			$scope.countryDataSource.data.push({
+				label: (responseObj.Response?"YES":"NO"),
+				value: responseObj.NumResponse
+			})
+		}
+		$scope.userDataSource.data=[];
+		for(var responseObj of OverallDataService.overallData.userData){
+			$scope.userDataSource.data.push({
+				label: (responseObj.Response?"YES":"NO"),
+				value: responseObj.NumResponse
+			})
+		}
 	}
 });
 

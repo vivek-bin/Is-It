@@ -115,8 +115,8 @@ app.post('/sendinput',function(req,res){
 			}
 			else{
 				console.log('reponse recorded')
-				res.end()
 			}
+			res.end()
 			connection.end(function (err){
 				if(err)		console.log('error while ending connection')
 				else		console.log('connection ended successfully')
@@ -128,12 +128,7 @@ app.post('/sendinput',function(req,res){
 app.get('/overallscr',function(req,res){
 	console.log('in overall path')
 	
-	res.overallData={
-		present: false,
-		worldData: {},
-		countryData: {},
-		userData: {}	
-	};
+	var overallData={};
 	
 	query_select='SELECT Response, COUNT(Response) AS NumResponse FROM userresponses '
 	query_groupby=' GROUP BY Response;'
@@ -153,22 +148,15 @@ app.get('/overallscr',function(req,res){
 		else console.log('You are now connected...')
 	})
 	
-	var queryCompleted=0;
 	connection.query(query_select + query_where + query_groupby, function(err, rows, fields) {
 		if(err){
 			console.log('error while getting world totals')
 		}
 		else{
-			res.overallData.present=true;
-			res.overallData.worldData=rows;
+			overallData.present=true;
+			overallData.worldData=rows;
 		}
-		++queryCompleted;
-		if(qyeryCompleted>=3){
-			connection.end(function (err){
-				if(err)		console.log('error while ending connection')
-				else		console.log('connection ended successfully')
-			})
-		}
+		console.log('got world data')
 	})
 	
 	if(req.cookies.userCountry){
@@ -178,16 +166,9 @@ app.get('/overallscr',function(req,res){
 				console.log('error while getting country totals')
 			}
 			else{
-				res.overallData.present=true;
-				res.overallData.countryData=rows;
+				overallData.countryData=rows;
 			}
-			++queryCompleted;
-			if(qyeryCompleted>=3){
-				connection.end(function (err){
-					if(err)		console.log('error while ending connection')
-					else		console.log('connection ended successfully')
-				})
-			}
+			console.log('got country data')
 		})
 	}
 	
@@ -198,16 +179,15 @@ app.get('/overallscr',function(req,res){
 				console.log('error while getting user totals')
 			}
 			else{
-				res.overallData.present=true;
-				res.overallData.userData=rows;
+				overallData.userData=rows;
 			}
-			++queryCompleted;
-			if(qyeryCompleted>=3){
-				connection.end(function (err){
-					if(err)		console.log('error while ending connection')
-					else		console.log('connection ended successfully')
-				})
-			}
+			console.log('got user data')
+
+			res.send({overallData: overallData})
+			connection.end(function (err){
+				if(err)		console.log('error while ending connection')
+				else		console.log('connection ended successfully')
+			})
 		})
 	}
 })
@@ -224,12 +204,7 @@ app.get('/detailedscr',function(req,res){
 		query_where='WHERE User_ID = "' + req.cookies.userId + '"'
 	}
 	
-	res.detailedData={
-		present: false,
-		monthly: {},
-		weekly: {},
-		hourly: {}
-	};
+	var detailedData={};
 	
 	var connection = mysql.createConnection({
 	  host: 'localhost',
@@ -245,20 +220,13 @@ app.get('/detailedscr',function(req,res){
 	
 	query_select='SELECT ?, Response, COUNT(Response) AS NumResponse FROM userresponses '
 	query_groupby=' GROUP BY Response, ?;'
-	var queryCompleted=0;
+	
 	connection.query(query_select + query_where + query_groupby ,'MONTH(Resp_Date) AS Month', 'MONTH(Resp_Date)', function(err, rows, fields) {
 		if(err){
 			console.log('error while getting monthly detailed')
 		}
 		else{
-			res.detailedData.monthly=rows;
-		}
-		++queryCompleted;
-		if(queryCompleted>=3){
-			connection.end(function (err){
-			if(err)		console.log('error while ending connection')
-			else		console.log('connection ended successfully')
-			})
+			detailedData.monthly=rows;
 		}
 	})
 	
@@ -267,14 +235,7 @@ app.get('/detailedscr',function(req,res){
 			console.log('error while getting weekly detailed')
 		}
 		else{
-			res.detailedData.weekly=rows;
-		}
-		++queryCompleted;
-		if(queryCompleted>=3){
-			connection.end(function (err){
-			if(err)		console.log('error while ending connection')
-			else		console.log('connection ended successfully')
-			})
+			detailedData.weekly=rows;
 		}
 	})
 	
@@ -283,15 +244,14 @@ app.get('/detailedscr',function(req,res){
 			console.log('error while getting hourly detailed')
 		}
 		else{
-			res.detailedData.hourly=rows;
+			detailedData.hourly=rows;
 		}
-		++queryCompleted;
-		if(queryCompleted>=3){
-			connection.end(function (err){
+		res.send({detailedData: detailedData})
+		connection.end(function (err){
 			if(err)		console.log('error while ending connection')
 			else		console.log('connection ended successfully')
-			})
-		}
+		})
+		
 	})
 })
 
