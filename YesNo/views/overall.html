@@ -1,25 +1,22 @@
 <div>
 
-<div ng-controller="GraphingCtrllr" ng-click="populateData()">
-    <div fusioncharts
-       width="200"
-       height="200"
+    <span fusioncharts
+       width="400"
+       height="300"
+       type="doughnut2d" 
+       dataSource="{{overallData.worldDataSource}}">
+    </span>
+    <span fusioncharts
+       width="500"
+       height="500"
        type="doughnut2d"
-       dataSource="{{worldDataSource}}">
-    </div>
-    <div fusioncharts
-       width="200"
-       height="200"
+       dataSource="{{overallData.userDataSource}}" >
+    </span>
+    <span fusioncharts
+       width="400"
+       height="300"
        type="doughnut2d"
-       dataSource="{{countryDataSource}}" >
-    </div>
-    <div fusioncharts
-       width="200"
-       height="200"
-       type="doughnut2d"
-       dataSource="{{userDataSource}}" >
-    </div>
-</div
-
-
+       dataSource="{{overallData.countryDataSource}}" >
+    </span>
+	
 </div>

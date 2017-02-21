@@ -34,11 +34,34 @@ angular.module('MyApp')
 })
 
 .controller('OverallDataCtrllr',function($scope,$http,OverallDataService){
-	console.log('in overall data ctrllr');
+	console.log('in overall data ctrllr')
+	$scope.overallData=OverallDataService.overallData
 	if(! OverallDataService.overallData.present){
 		$http.get('/overallscr')
 		.then(function(res){
-			OverallDataService.overallData=res.data.overallData;
+			OverallDataService.overallData.present=true
+			OverallDataService.overallData.worldDataSource.data=[]
+			for(var responseObj of res.data.overallData.worldData){
+				OverallDataService.overallData.worldDataSource.data.push({
+					label: (responseObj.Response?"YES":"NO"),
+					value: responseObj.NumResponse
+				})
+			}
+			OverallDataService.overallData.countryDataSource.data=[]
+			for(var responseObj of res.data.overallData.countryData){
+				OverallDataService.overallData.countryDataSource.data.push({
+					label: (responseObj.Response?"YES":"NO"),
+					value: responseObj.NumResponse
+				})
+			}
+			OverallDataService.overallData.userDataSource.data=[]
+			for(var responseObj of res.data.overallData.userData){
+				OverallDataService.overallData.userDataSource.data.push({
+					label: (responseObj.Response?"YES":"NO"),
+					value: responseObj.NumResponse
+				})
+			}
+			$scope.overallData=OverallDataService.overallData
 		}
 		,function(error){
 			console.log('AJAX failed getting overall data');
@@ -54,15 +77,15 @@ angular.module('MyApp')
 		.then(function(res){
 			if($scope.detailedData.dataOf=='world'){
 				DetailedDataService.worldData.present=true;
-				DetailedDataService.worldData.detailedData=res.data.detailedData;
+				DetailedDataService.detailedData.worldData=res.data.detailedData;
 			}
 			if($scope.detailedData.dataOf=='country'){
 				DetailedDataService.countryData.present=true;
-				DetailedDataService.countryData.detailedData=res.data.detailedData;
+				DetailedDataService.detailedData.countryData=res.data.detailedData;
 			}
 			if($scope.detailedData.dataOf=='user'){
 				DetailedDataService.userData.present=true;
-				DetailedDataService.userData.detailedData=res.data.detailedData;
+				DetailedDataService.detailedData.userData=res.data.detailedData;
 			}
 		}
 		,function(error){
@@ -70,60 +93,3 @@ angular.module('MyApp')
 		})
 	}
 })
-
-.controller('GraphingCtrllr', function ($scope,OverallDataService) {
-	console.log('in graph ctrllr')
-	
-	$scope.worldDataSource = {
-		chart: {
-				caption: "World",
-			},
-			data:[{
-				label: "Nothin'",
-				value: 0.00001
-			}]
-	}
-	$scope.countryDataSource = {
-		chart: {
-				caption: "Country",
-			},
-			data:[{
-				label: "Nothin'",
-				value: 0.00001
-			}]
-	}
-	$scope.userDataSource = {
-		chart: {
-				caption: "User",
-			},
-			data:[{
-				label: "Nothin'",
-				value: 0.00001
-			}]
-	}
-	
-	$scope.populateData=function(){
-		$scope.worldDataSource.data=[];
-		for(var responseObj of OverallDataService.overallData.worldData){
-			$scope.worldDataSource.data.push({
-				label: (responseObj.Response?"YES":"NO"),
-				value: responseObj.NumResponse
-			})
-		}
-		$scope.countryDataSource.data=[];
-		for(var responseObj of OverallDataService.overallData.countryData){
-			$scope.countryDataSource.data.push({
-				label: (responseObj.Response?"YES":"NO"),
-				value: responseObj.NumResponse
-			})
-		}
-		$scope.userDataSource.data=[];
-		for(var responseObj of OverallDataService.overallData.userData){
-			$scope.userDataSource.data.push({
-				label: (responseObj.Response?"YES":"NO"),
-				value: responseObj.NumResponse
-			})
-		}
-	}
-});
-

@@ -5,7 +5,36 @@ angular.module('MyApp')
 })
 
 .service('OverallDataService',function(){
-	this.overallData={};
+	this.overallData={
+		present: false,
+		worldDataSource: {
+			chart: {
+				caption: "World",
+			},
+			data: [{
+				label: "Nothin'",
+				value: 0.00001
+			}]
+		},
+		countryDataSource: {
+			chart: {
+				caption: "Country",
+			},
+			data: [{
+				label: "Nothin'",
+				value: 0.00001
+			}]
+		},
+		userDataSource: {
+			chart: {
+				caption: "User",
+			},
+			data: [{
+				label: "Nothin'",
+				value: 0.00001
+			}]
+		}
+	}
 })
 
 .service('DetailedDataService',function(){
