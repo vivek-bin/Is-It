@@ -8,6 +8,8 @@ app.use(cookieParser())
 app.use(bodyParser.json());
 
 app.use(function(req,res,next){
+	console.log(req.cookies.userId)
+	console.log(req.cookies.userCountry)
 	if(!req.cookies.userId){
 		var connection = mysql.createConnection({
 		  host: 'localhost',
@@ -29,12 +31,15 @@ app.use(function(req,res,next){
 			}
 			else{
 				if(rows.length){
-					res.cookie('userId',rows[0].MaxId + 3)
+					res.cookie('userId',rows[0].MaxId + 3, { maxAge: (5 * 365 * 24 * 60 * 60 * 1000), httpOnly: true })
 				}
 				else{
-					res.cookie('userId',100)
+					res.cookie('userId',100, { maxAge: (5 * 365 * 24 * 60 * 60 * 1000), httpOnly: true })
 				}
-				
+				connection.end(function (err){
+					if(err)		console.log('error while ending connection')
+					else		console.log('connection ended successfully')
+				})
 				console.log('new user id');
 			}
 			next()
@@ -47,7 +52,7 @@ app.use(function(req,res,next){
 
 app.use(function(req,res,next){
 	if(!req.cookies.userCountry){
-		res.cookie('userCountry','IN')
+		res.cookie('userCountry','IN', { maxAge: (5 * 24 * 60 * 60 * 1000), httpOnly: true })
 		console.log('new user country');
 		next()
 	}

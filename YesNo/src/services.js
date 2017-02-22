@@ -9,7 +9,23 @@ angular.module('MyApp')
 		present: false,
 		worldDataSource: {
 			chart: {
-				caption: "World",
+				defaultCenterLabel: "WORLD",
+				centerLabel: "$value",
+				centerLabelFontSize: 18,
+				centerLabelColor: "#999999",
+				centerlabelhovercolor: "#999999",
+				bgColor: "#0000",
+				bgAlpha: "80",
+				pieRadius: 140,
+				valueFontSize: 15,
+				placeValuesInside: 1,
+				anchorAlpha: "10",
+				showlabels: 1,
+				showValues: 0,
+				palettecolors: "#111111,#f9bd19",
+				enableSmartLabels : 0,
+				labelDistance : "1",
+				
 			},
 			data: [{
 				label: "Nothin'",
@@ -18,7 +34,15 @@ angular.module('MyApp')
 		},
 		countryDataSource: {
 			chart: {
-				caption: "Country",
+				defaultCenterLabel: "COUNTRY",
+				centerLabel: "$value",
+				centerLabelFontSize: 18,
+				centerLabelColor: "#999999",
+				centerlabelhovercolor: "#999999",
+				bgColor: "#0000",
+				bgAlpha: "80",
+				pieRadius: 140,
+				valueFontSize: 15,
 			},
 			data: [{
 				label: "Nothin'",
@@ -27,7 +51,14 @@ angular.module('MyApp')
 		},
 		userDataSource: {
 			chart: {
-				caption: "User",
+				defaultCenterLabel: "User",
+				centerLabel: "User",
+				centerLabelFontSize: 20,
+				centerLabelColor: "#999999",
+				centerlabelhovercolor: "#999999",
+				pieRadius: 200,
+				valueFontSize: 18,
+				bgColor: "#111"
 			},
 			data: [{
 				label: "Nothin'",

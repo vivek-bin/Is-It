@@ -43,21 +43,21 @@ angular.module('MyApp')
 			OverallDataService.overallData.worldDataSource.data=[]
 			for(var responseObj of res.data.overallData.worldData){
 				OverallDataService.overallData.worldDataSource.data.push({
-					label: (responseObj.Response?"YES":"NO"),
+					label: (responseObj.Response?"Yes":"No"),
 					value: responseObj.NumResponse
 				})
 			}
 			OverallDataService.overallData.countryDataSource.data=[]
 			for(var responseObj of res.data.overallData.countryData){
 				OverallDataService.overallData.countryDataSource.data.push({
-					label: (responseObj.Response?"YES":"NO"),
+					label: (responseObj.Response?"Yes":"No"),
 					value: responseObj.NumResponse
 				})
 			}
 			OverallDataService.overallData.userDataSource.data=[]
 			for(var responseObj of res.data.overallData.userData){
 				OverallDataService.overallData.userDataSource.data.push({
-					label: (responseObj.Response?"YES":"NO"),
+					label: (responseObj.Response?"Yes":"No"),
 					value: responseObj.NumResponse
 				})
 			}
