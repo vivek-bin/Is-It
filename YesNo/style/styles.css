@@ -4,7 +4,7 @@
 	left: 50%;
 	transform: translateX(-50%);
 	text-shadow: 1px 1px 8px #fff, -1px -1px 5px #222;
-	font-size:300%;
+	font-size:400%;
 }
 
 .footer{
@@ -14,6 +14,11 @@
 	transform: translateX(-50%);
 	font-size:60%;
 	color: #131;
+}
+
+a{
+	text-decoration: none;
+	color: black;
 }
 
 .response-box{
@@ -28,4 +33,18 @@
 	position: fixed;
 	top: 15%;
 	height: 80%;
+}
+
+.arrow-back,.arrow-forward{
+	position: fixed;
+	top: 20px;
+	font-size: 80px;
+	color: #333;
+	text-shadow: 0px 0px 20px #111;
+}
+.arrow-back{
+	left: 5px;
+}
+.arrow-forward{
+	right: 5px;
 }

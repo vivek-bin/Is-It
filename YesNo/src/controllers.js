@@ -40,21 +40,24 @@ angular.module('MyApp')
 		$http.get('/overallscr')
 		.then(function(res){
 			OverallDataService.overallData.present=true
-			OverallDataService.overallData.worldDataSource.data=[]
+			if(res.data.overallData.worldData.length > 0)
+				OverallDataService.overallData.worldDataSource.data=[]
 			for(var responseObj of res.data.overallData.worldData){
 				OverallDataService.overallData.worldDataSource.data.push({
 					label: (responseObj.Response?"Yes":"No"),
 					value: responseObj.NumResponse
 				})
 			}
-			OverallDataService.overallData.countryDataSource.data=[]
+			if(res.data.overallData.countryData.length > 0)
+				OverallDataService.overallData.countryDataSource.data=[]
 			for(var responseObj of res.data.overallData.countryData){
 				OverallDataService.overallData.countryDataSource.data.push({
 					label: (responseObj.Response?"Yes":"No"),
 					value: responseObj.NumResponse
 				})
 			}
-			OverallDataService.overallData.userDataSource.data=[]
+			if(res.data.overallData.userData.length > 0)
+				OverallDataService.overallData.userDataSource.data=[]
 			for(var responseObj of res.data.overallData.userData){
 				OverallDataService.overallData.userDataSource.data.push({
 					label: (responseObj.Response?"Yes":"No"),
@@ -69,24 +72,68 @@ angular.module('MyApp')
 	}
 })
 
-.controller('DetailedDataCtrllr',function($scope,$http,DetailedDataService){
-	console.log('in detail data ctrllr');
-	
-	if(! DetailedDataService.categoryGet($scope.detailedData.dataOf).detailedData.present){
-		$http.get('/detailedscr',{dataOf : $scope.detailedData.dataOf})
+.controller('DetailedDataCtrllr',function($scope,$http,$routeParams,DetailedDataService){
+	console.log('in detail data ctrllr')
+	var present
+	var dataOf=$routeParams.dataOf.substr(1)
+	var setValues=function(){
+		DetailedDataService.prepareData(dataOf)
+		$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
+		$scope.weeklyDataSource=DetailedDataService.detailedData.weeklyDataSource
+		$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource
+	}
+	setValues()
+	if(dataOf=='world'){
+		present=DetailedDataService.detailedData.worldData.present;
+	}
+	if(dataOf=='country'){
+		present=DetailedDataService.detailedData.countryData.present;
+	}
+	if(dataOf=='user'){
+		present=DetailedDataService.detailedData.userData.present;
+	}
+	console.log(dataOf)
+	if(! present){
+		console.log(dataOf+' fetching')
+		$http.get('/detailedscr',{params:{'dataOf' : dataOf}})
 		.then(function(res){
-			if($scope.detailedData.dataOf=='world'){
-				DetailedDataService.worldData.present=true;
-				DetailedDataService.detailedData.worldData=res.data.detailedData;
+			if(dataOf=='world'){
+				DetailedDataService.detailedData.worldData.present=true;
+				for(var responseObj of res.data.detailedData.monthlyData){
+					DetailedDataService.detailedData.worldData.monthlyData.dataset[responseObj.Response].data[responseObj.Month-1].value=responseObj.NumResponse
+				}
+				for(var responseObj of res.data.detailedData.weeklyData){
+					DetailedDataService.detailedData.worldData.weeklyData.dataset[responseObj.Response].data[responseObj.WeekDay].value=responseObj.NumResponse
+				}
+				for(var responseObj of res.data.detailedData.hourlyData){
+					DetailedDataService.detailedData.worldData.hourlyData.dataset[responseObj.Response].data[responseObj.Hour].value=responseObj.NumResponse
+				}
 			}
-			if($scope.detailedData.dataOf=='country'){
-				DetailedDataService.countryData.present=true;
-				DetailedDataService.detailedData.countryData=res.data.detailedData;
+			if(dataOf=='country'){
+				DetailedDataService.detailedData.countryData.present=true;
+				for(var responseObj of res.data.detailedData.monthlyData){
+					DetailedDataService.detailedData.countryData.monthlyData.dataset[responseObj.Response].data[responseObj.Month-1].value=responseObj.NumResponse
+				}
+				for(var responseObj of res.data.detailedData.weeklyData){
+					DetailedDataService.detailedData.countryData.weeklyData.dataset[responseObj.Response].data[responseObj.WeekDay].value=responseObj.NumResponse
+				}
+				for(var responseObj of res.data.detailedData.hourlyData){
+					DetailedDataService.detailedData.countryData.hourlyData.dataset[responseObj.Response].data[responseObj.Hour].value=responseObj.NumResponse
+				}
 			}
-			if($scope.detailedData.dataOf=='user'){
-				DetailedDataService.userData.present=true;
-				DetailedDataService.detailedData.userData=res.data.detailedData;
+			if(dataOf=='user'){
+				DetailedDataService.detailedData.userData.present=true;
+				for(var responseObj of res.data.detailedData.monthlyData){
+					DetailedDataService.detailedData.userData.monthlyData.dataset[responseObj.Response].data[responseObj.Month-1].value=responseObj.NumResponse
+				}
+				for(var responseObj of res.data.detailedData.weeklyData){
+					DetailedDataService.detailedData.userData.weeklyData.dataset[responseObj.Response].data[responseObj.WeekDay].value=responseObj.NumResponse
+				}
+				for(var responseObj of res.data.detailedData.hourlyData){
+					DetailedDataService.detailedData.userData.hourlyData.dataset[responseObj.Response].data[responseObj.Hour].value=responseObj.NumResponse
+				}
 			}
+			setValues()
 		}
 		,function(error){
 			console.log('AJAX failed getting detailed data')

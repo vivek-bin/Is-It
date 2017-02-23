@@ -200,15 +200,17 @@ app.get('/overallscr',function(req,res){
 app.get('/detailedscr',function(req,res){
 	console.log('in detailed path')
 	
-	if(req.dataOf=='world'){
+	var query_where=''
+	
+	if(req.query.dataOf=='world'){
 		query_where=''
-	}else if(req.dataOf=='country'){
+	}else if(req.query.dataOf=='country'){
 		query_where='WHERE User_Country = "' + req.cookies.userCountry + '"'
 	}
-	else if(req.dataOf=='user'){
+	else if(req.query.dataOf=='user'){
 		query_where='WHERE User_ID = "' + req.cookies.userId + '"'
 	}
-	
+
 	var detailedData={};
 	
 	var connection = mysql.createConnection({
@@ -223,34 +225,39 @@ app.get('/detailedscr',function(req,res){
 		else console.log('You are now connected...')
 	})
 	
-	query_select='SELECT ?, Response, COUNT(Response) AS NumResponse FROM userresponses '
-	query_groupby=' GROUP BY Response, ?;'
-	
-	connection.query(query_select + query_where + query_groupby ,'MONTH(Resp_Date) AS Month', 'MONTH(Resp_Date)', function(err, rows, fields) {
+	query_select='SELECT MONTH(Resp_Date) AS Month, Response, COUNT(Response) AS NumResponse FROM userresponses '
+	query_groupby=' GROUP BY Response, MONTH(Resp_Date);'
+	connection.query(query_select + query_where + query_groupby , function(err, rows, fields) {
 		if(err){
 			console.log('error while getting monthly detailed')
 		}
 		else{
-			detailedData.monthly=rows;
+			detailedData.present=true
+			detailedData.monthlyData=rows;
 		}
 	})
 	
-	connection.query(query_select + query_where + query_groupby ,'WEEKDAY(Resp_Date) AS WeekDay', 'WEEKDAY(Resp_Date)', function(err, rows, fields) {
+	query_select='SELECT WEEKDAY(Resp_Date) AS WeekDay, Response, COUNT(Response) AS NumResponse FROM userresponses '
+	query_groupby=' GROUP BY Response, WEEKDAY(Resp_Date);'
+	connection.query(query_select + query_where + query_groupby , function(err, rows, fields) {
 		if(err){
 			console.log('error while getting weekly detailed')
 		}
 		else{
-			detailedData.weekly=rows;
+			detailedData.weeklyData=rows;
 		}
 	})
 	
-	connection.query(query_select + query_where + query_groupby ,'HOUR(Resp_Time) AS Hour', 'HOUR(Resp_Time)', function(err, rows, fields) {
+	query_select='SELECT HOUR(Resp_Time) AS Hour, Response, COUNT(Response) AS NumResponse FROM userresponses '
+	query_groupby=' GROUP BY Response, HOUR(Resp_Time);'
+	connection.query(query_select + query_where + query_groupby , function(err, rows, fields) {
 		if(err){
 			console.log('error while getting hourly detailed')
 		}
 		else{
-			detailedData.hourly=rows;
+			detailedData.hourlyData=rows;
 		}
+		console.log("detailedData sending")
 		res.send({detailedData: detailedData})
 		connection.end(function (err){
 			if(err)		console.log('error while ending connection')

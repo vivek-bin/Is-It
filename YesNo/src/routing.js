@@ -9,7 +9,7 @@ angular.module('MyApp')
 		templateUrl:'/views/overall.html',
 		controller:'OverallDataCtrllr'
 	})
-	.when('/detailed',{
+	.when('/detailed/:dataOf',{
 		templateUrl:'/views/detailed.html',
 		controller:'DetailedDataCtrllr'
 	})
