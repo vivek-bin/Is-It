@@ -79,7 +79,13 @@ angular.module('MyApp')
 		monthlyDataSource: {
 			chart: {
 				xAxisName: "MONTH",
-				paletteColors: "#0075c2,#1aaf5d"
+				paletteColors: "#0055a2,#1aaf5d",
+				bgColor: "#000",
+				bgAlpha: "80%",
+				canvasbgcolor: "#111",
+				canvasbgalpha: "20%",
+				labelfontsize: "12",
+				legendbgcolor: "#111"
 			},
 			categories: [{
 				category: [{
@@ -167,7 +173,13 @@ angular.module('MyApp')
 		weeklyDataSource: {
 			chart: {
 				xAxisName: "WEEK",
-				paletteColors: "#0075c2,#1aaf5d"
+				paletteColors: "#0075c2,#1aaf5d",
+				bgColor: "#000",
+				bgAlpha: "80%",
+				canvasbgcolor: "#111",
+				canvasbgalpha: "20%",
+				labelfontsize: "12",
+				legendbgcolor: "#111"
 			},
 			categories: [{
 				category: [{
@@ -225,7 +237,13 @@ angular.module('MyApp')
 		hourlyDataSource: {
 			chart: {        
 				xAxisName: "Hour",
-				paletteColors: "#0075c2,#1aaf5d"
+				paletteColors: "#0075c2,#1aaf5d",
+				bgColor: "#000",
+				bgAlpha: "80%",
+				canvasbgcolor: "#111",
+				canvasbgalpha: "20%",
+				labelfontsize: "12",
+				legendbgcolor: "#111"
 			},
 			categories: [{
 				category: [{

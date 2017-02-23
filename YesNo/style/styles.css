@@ -1,10 +1,10 @@
 .heading{
 	position: fixed;
-	top: 0;
+	top: -2%;
 	left: 50%;
 	transform: translateX(-50%);
-	text-shadow: 1px 1px 8px #fff, -1px -1px 5px #222;
-	font-size:400%;
+	text-shadow: 1px 1px 14px #fff, -1px -1px 5px #222;
+	font-size:600%;
 }
 
 .footer{
@@ -12,35 +12,53 @@
 	bottom: 0;
 	left: 50%;
 	transform: translateX(-50%);
-	font-size:60%;
-	color: #131;
+	font-size:70%;
+	color: #fff;
 }
 
 a{
 	text-decoration: none;
-	color: black;
+	color: #777;
 }
 
-.response-box{
-	position: relative;
+body{
+	background-image: url("http://localhost:8081/img/Texture-Black-Background.jpg");
+	background-size: cover;
+}
+
+.response-box-yes,.response-box-no {
+	position: fixed;
 	top: 50%;
+	width: 250px;
+	height: 100px;
+	font-size: 80px;
+	text-align: center;
+	text-shadow: 0px 0px 20px #111;
 	transform: translateY(-50%);
 	background-color: #999;
 	margin: 5px 20px;
+	border-radius: 15px;
+	box-shadow: 0px 0px 25px 3px #888, inset 0px 0px 10px 1px #111;
+}
+.response-box-yes{
+	left: 25%;
+}
+.response-box-no{
+	right: 25%;
 }
 
 .main-body{
 	position: fixed;
 	top: 15%;
 	height: 80%;
+	width:100%
 }
 
 .arrow-back,.arrow-forward{
 	position: fixed;
 	top: 20px;
 	font-size: 80px;
-	color: #333;
-	text-shadow: 0px 0px 20px #111;
+	text-shadow: 0px 0px 45px #999,0px 0px 55px #999;
 }
 .arrow-back{
 	left: 5px;
@@ -48,3 +66,44 @@ a{
 .arrow-forward{
 	right: 5px;
 }
+
+.overall-world,.overall-country,.overall-user{	
+	position: absolute;
+	top: 50%;
+	box-shadow: 0px 0px 15px 2px #888;
+}
+.overall-world{
+	left: 2%;
+	transform: translateY(-50%);
+}
+.overall-country{
+	right: 2%;
+	transform: translateY(-50%);
+}
+.overall-user{
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.detailed-month,.detailed-week,.detailed-hour{
+	position: absolute;
+	box-shadow: 0px 0px 20px 3px #666;
+}
+.detailed-month{
+	top: 2%;
+	left:15%;
+}
+.detailed-week{
+	top: 2%;
+	right:15%;
+}
+.detailed-hour{
+	bottom: -2%;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.view-area.ng-show,view-area.ng-hide{
+	transition: all 1s ease;
+}
+
