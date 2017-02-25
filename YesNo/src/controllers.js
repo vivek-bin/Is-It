@@ -128,13 +128,10 @@ angular.module('MyApp')
 		DetailedDataService.detailedData.userData.present=false
 	}
 	
-	var setValues=function(){
-		DetailedDataService.prepareData(dataOf)
-		$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
-		$scope.weeklyDataSource=DetailedDataService.detailedData.weeklyDataSource
-		$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource
-	}
-	setValues()
+	DetailedDataService.prepareData(dataOf)
+	$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
+	$scope.weeklyDataSource=DetailedDataService.detailedData.weeklyDataSource
+	$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource
 	
 	var present
 	if(dataOf=='world'){
@@ -154,40 +151,44 @@ angular.module('MyApp')
 			if(dataOf=='world'){
 				DetailedDataService.detailedData.worldData.present=true;
 				for(var responseObj of res.data.detailedData.monthlyData){
-					DetailedDataService.detailedData.worldData.monthlyData.dataset[responseObj.Response].data[responseObj.Month-1].value=responseObj.NumResponse
+					DetailedDataService.detailedData.worldData.monthlyData.dataset[responseObj.Response][responseObj.Month-1]=responseObj.NumResponse
 				}
 				for(var responseObj of res.data.detailedData.weeklyData){
-					DetailedDataService.detailedData.worldData.weeklyData.dataset[responseObj.Response].data[responseObj.WeekDay].value=responseObj.NumResponse
+					DetailedDataService.detailedData.worldData.weeklyData.dataset[responseObj.Response][responseObj.WeekDay]=responseObj.NumResponse
 				}
 				for(var responseObj of res.data.detailedData.hourlyData){
-					DetailedDataService.detailedData.worldData.hourlyData.dataset[responseObj.Response].data[responseObj.Hour].value=responseObj.NumResponse
+					DetailedDataService.detailedData.worldData.hourlyData.dataset[responseObj.Response][responseObj.Hour]=responseObj.NumResponse
 				}
 			}
 			if(dataOf=='country'){
 				DetailedDataService.detailedData.countryData.present=true;
 				for(var responseObj of res.data.detailedData.monthlyData){
-					DetailedDataService.detailedData.countryData.monthlyData.dataset[responseObj.Response].data[responseObj.Month-1].value=responseObj.NumResponse
+					DetailedDataService.detailedData.countryData.monthlyData.dataset[responseObj.Response][responseObj.Month-1]=responseObj.NumResponse
 				}
 				for(var responseObj of res.data.detailedData.weeklyData){
-					DetailedDataService.detailedData.countryData.weeklyData.dataset[responseObj.Response].data[responseObj.WeekDay].value=responseObj.NumResponse
+					DetailedDataService.detailedData.countryData.weeklyData.dataset[responseObj.Response][responseObj.WeekDay]=responseObj.NumResponse
 				}
 				for(var responseObj of res.data.detailedData.hourlyData){
-					DetailedDataService.detailedData.countryData.hourlyData.dataset[responseObj.Response].data[responseObj.Hour].value=responseObj.NumResponse
+					DetailedDataService.detailedData.countryData.hourlyData.dataset[responseObj.Response][responseObj.Hour]=responseObj.NumResponse
 				}
 			}
 			if(dataOf=='user'){
 				DetailedDataService.detailedData.userData.present=true;
 				for(var responseObj of res.data.detailedData.monthlyData){
-					DetailedDataService.detailedData.userData.monthlyData.dataset[responseObj.Response].data[responseObj.Month-1].value=responseObj.NumResponse
+					DetailedDataService.detailedData.userData.monthlyData.dataset[responseObj.Response][responseObj.Month-1]=responseObj.NumResponse
 				}
 				for(var responseObj of res.data.detailedData.weeklyData){
-					DetailedDataService.detailedData.userData.weeklyData.dataset[responseObj.Response].data[responseObj.WeekDay].value=responseObj.NumResponse
+					DetailedDataService.detailedData.userData.weeklyData.dataset[responseObj.Response][responseObj.WeekDay]=responseObj.NumResponse
 				}
 				for(var responseObj of res.data.detailedData.hourlyData){
-					DetailedDataService.detailedData.userData.hourlyData.dataset[responseObj.Response].data[responseObj.Hour].value=responseObj.NumResponse
+					DetailedDataService.detailedData.userData.hourlyData.dataset[responseObj.Response][responseObj.Hour]=responseObj.NumResponse
 				}
 			}
-			setValues()
+			
+			DetailedDataService.prepareData(dataOf)
+			$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
+			$scope.weeklyDataSource=DetailedDataService.detailedData.weeklyDataSource
+			$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource
 		}
 		,function(error){
 			console.log('AJAX failed getting detailed data')

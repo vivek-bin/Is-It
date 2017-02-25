@@ -1,22 +1,19 @@
 <div>
 <div class="arrow-back"><a href='#overall'>←</a></div>
-    <span fusioncharts class="detailed-month"
-       width="450"
-       height="250"
-       type="msarea" 
-       dataSource="{{monthlyDataSource}}" >
-    </span>
-    <span fusioncharts class="detailed-week"
-       width="450"
-       height="250"
-       type="msarea"
-       dataSource="{{weeklyDataSource}}" >
-    </span>
-    <span fusioncharts class="detailed-hour"
-       width="1050"
-       height="250"
-       type="msarea"
-       dataSource="{{hourlyDataSource}}" >
-    </span>
+	<div class="detailed-month">
+		<canvas id="line" width="500" height="240" class="chart chart-line" chart-data="monthlyDataSource.dataset"
+		chart-labels="monthlyDataSource.labels" chart-series="monthlyDataSource.series">
+		</canvas>
+	</div>
+	<div class="detailed-week">
+		<canvas id="line" width="450" height="240" class="chart chart-line" chart-data="weeklyDataSource.dataset"
+		chart-labels="weeklyDataSource.labels" chart-series="weeklyDataSource.series">
+		</canvas>
+	</div>
+	<div class="detailed-hour">
+		<canvas id="line" width="1000" height="240" class="chart chart-line" chart-data="hourlyDataSource.dataset"
+		chart-labels="hourlyDataSource.labels" chart-series="hourlyDataSource.series">
+		</canvas>
+	</div>
 
 </div>
