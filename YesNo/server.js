@@ -2,6 +2,7 @@ var express=require('express')
 var cookieParser=require('cookie-parser')
 var mysql=require('mysql')
 var bodyParser=require('body-parser');
+var http=require('http')
 
 var app=express()
 app.use(cookieParser())
@@ -52,9 +53,34 @@ app.use(function(req,res,next){
 
 app.use(function(req,res,next){
 	if(!req.cookies.userCountry){
-		res.cookie('userCountry','IN', { maxAge: (5 * 24 * 60 * 60 * 1000), httpOnly: true })
-		console.log('new user country');
-		next()
+		var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+		console.log(ip)
+		var options = {
+		  hostname: 'freegeoip.net',
+		  path: '/json/' + ip,
+		  method: 'GET'
+		};
+
+		var req = http.request(options, function(response){
+			var body=''
+			response.setEncoding('utf8');
+			response.on('data', function(data){
+				body+=data
+			});
+			response.on('end', function(){
+				var country=JSON.parse(body).country_code
+				if(country==''){
+					country='00'
+				}
+				res.cookie('userCountry',country, { maxAge: (5 * 24 * 60 * 60 * 1000), httpOnly: true })
+				console.log('new user country');
+				next()
+			});
+		});
+		req.on('error', function(e){
+			console.log('problem with request:' + e.message);
+		});
+		req.end();
 	}
 	else{
 		next()

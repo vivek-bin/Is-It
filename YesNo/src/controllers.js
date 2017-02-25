@@ -16,7 +16,7 @@ angular.module('MyApp')
 	})
 })
 
-.controller('SendInputCtrllr',function($scope,$location,InputService){
+.controller('SendInputCtrllr',function($scope,$http,$location,InputService){
 	console.log('in send ip ctrllr')
 	$scope.$parent.largeHeading=true
 	
@@ -25,11 +25,14 @@ angular.module('MyApp')
 	}
 	
 	$scope.sendInput=function(userResponse){
-		if(!(InputService.acceptedInputChecked && InputService.acceptedInput)){
+		console.log('sending ip')
+		if(! (InputService.acceptedInputChecked && InputService.acceptedInput)){
 			console.log('sending response ');
 			$http.post('/sendinput',{'userResponse' : userResponse})
 			.then(function(res){
 				InputService.acceptedInput=true;
+				InputService.refreshOverall=true;
+				InputService.refreshDetailed=true;
 				$location.path('/overall')
 			}
 			,function(error){
@@ -43,37 +46,66 @@ angular.module('MyApp')
 	console.log('in overall data ctrllr')
 	
 	$scope.backAllowed=!(InputService.acceptedInputChecked && InputService.acceptedInput)
-	console.log("back allwd "+InputService.acceptedInputChecked+InputService.acceptedInput)
+	
+	if(InputService.refreshOverall===true){
+		InputService.refreshOverall=false
+		OverallDataService.overallData.present=false
+	}
 	$scope.$parent.largeHeading=false
 	$scope.overallData=OverallDataService.overallData
 	if(! OverallDataService.overallData.present){
 		$http.get('/overallscr')
 		.then(function(res){
 			OverallDataService.overallData.present=true
-			if(res.data.overallData.worldData.length > 0)
-				OverallDataService.overallData.worldDataSource.data=[]
+			
+			OverallDataService.overallData.worldData.yes=0;
+			OverallDataService.overallData.worldData.no=0;
 			for(var responseObj of res.data.overallData.worldData){
-				OverallDataService.overallData.worldDataSource.data.push({
-					label: (responseObj.Response?"Yes":"No"),
-					value: responseObj.NumResponse
-				})
+				if(responseObj.Response){
+					OverallDataService.overallData.worldData.yes=responseObj.NumResponse
+				}
+				else{
+					OverallDataService.overallData.worldData.no=responseObj.NumResponse
+				}
 			}
-			if(res.data.overallData.countryData.length > 0)
-				OverallDataService.overallData.countryDataSource.data=[]
+			OverallDataService.overallData.worldData.angle=90
+			if(OverallDataService.overallData.worldData.no+OverallDataService.overallData.worldData.yes > 0){
+				OverallDataService.overallData.worldData.angle=180*OverallDataService.overallData.worldData.yes
+				OverallDataService.overallData.worldData.angle/=OverallDataService.overallData.worldData.no+OverallDataService.overallData.worldData.yes
+			}
+			
+			OverallDataService.overallData.countryData.yes=0;
+			OverallDataService.overallData.countryData.no=0;
+			OverallDataService.overallData.countryData.country='/img/flags/'+res.data.overallData.country+'.jpg';
 			for(var responseObj of res.data.overallData.countryData){
-				OverallDataService.overallData.countryDataSource.data.push({
-					label: (responseObj.Response?"Yes":"No"),
-					value: responseObj.NumResponse
-				})
+				if(responseObj.Response){
+					OverallDataService.overallData.countryData.yes=responseObj.NumResponse
+				}
+				else{
+					OverallDataService.overallData.countryData.no=responseObj.NumResponse
+				}
 			}
-			if(res.data.overallData.userData.length > 0)
-				OverallDataService.overallData.userDataSource.data=[]
+			OverallDataService.overallData.countryData.angle=90
+			if(OverallDataService.overallData.countryData.no+OverallDataService.overallData.countryData.yes > 0){
+				OverallDataService.overallData.countryData.angle=180*OverallDataService.overallData.countryData.yes;
+				OverallDataService.overallData.countryData.angle/=OverallDataService.overallData.countryData.no+OverallDataService.overallData.countryData.yes;
+			}
+			OverallDataService.overallData.userData.yes=0;
+			OverallDataService.overallData.userData.no=0;
 			for(var responseObj of res.data.overallData.userData){
-				OverallDataService.overallData.userDataSource.data.push({
-					label: (responseObj.Response?"Yes":"No"),
-					value: responseObj.NumResponse
-				})
+				if(responseObj.Response){
+					OverallDataService.overallData.userData.yes=responseObj.NumResponse
+				}
+				else{
+					OverallDataService.overallData.userData.no=responseObj.NumResponse
+				}
 			}
+			OverallDataService.overallData.userData.angle=90
+			if(OverallDataService.overallData.userData.no+OverallDataService.overallData.userData.yes > 0){
+				OverallDataService.overallData.userData.angle=180*OverallDataService.overallData.userData.yes;
+				OverallDataService.overallData.userData.angle/=OverallDataService.overallData.userData.no+OverallDataService.overallData.userData.yes;
+			}
+			
 			$scope.overallData=OverallDataService.overallData
 		}
 		,function(error){
@@ -82,12 +114,20 @@ angular.module('MyApp')
 	}
 })
 
-.controller('DetailedDataCtrllr',function($scope,$http,$routeParams,DetailedDataService){
+.controller('DetailedDataCtrllr',function($scope,$http,$routeParams,DetailedDataService,InputService){
 	console.log('in detail data ctrllr')
 	
 	$scope.$parent.largeHeading=false
-	var present
+	
 	var dataOf=$routeParams.dataOf.substr(1)
+	
+	if(InputService.refreshDetailed===true){
+		InputService.refreshDetailed=false
+		DetailedDataService.detailedData.worldData.present=false
+		DetailedDataService.detailedData.countryData.present=false
+		DetailedDataService.detailedData.userData.present=false
+	}
+	
 	var setValues=function(){
 		DetailedDataService.prepareData(dataOf)
 		$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
@@ -95,6 +135,8 @@ angular.module('MyApp')
 		$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource
 	}
 	setValues()
+	
+	var present
 	if(dataOf=='world'){
 		present=DetailedDataService.detailedData.worldData.present;
 	}
@@ -152,3 +194,4 @@ angular.module('MyApp')
 		})
 	}
 })
+

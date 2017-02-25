@@ -2,9 +2,12 @@
 	position: fixed;
 	top: -2%;
 	left: 50%;
+	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
 	transform: translateX(-50%);
 	text-shadow: 1px 1px 14px #fff, -1px -1px 5px #222;
-	-webkit-transition: all linear 1s; 
+	-webkit-transition: all linear 0.3s; 
+	-moz-transition: all linear 0.3s; 
 	transition: all linear 0.3s; 
 }
 .heading.large-heading{
@@ -18,23 +21,38 @@
 	position: fixed;
 	bottom: 0;
 	left: 50%;
+	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
 	transform: translateX(-50%);
 	font-size:70%;
 	color: #fff;
 }
 
 a{
+	-webkit-text-decoration: none;
+	-moz-text-decoration: none;
 	text-decoration: none;
 	color: #777;
 }
 
 body{
-	background-image: url("http://localhost:8081/img/Texture-Black-Background-mask.png");
+	background-image: url("/img/Texture-Black-Background-mask.png");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
 	background-size: cover;
-	-webkit-animation: color-change 15s infinite; 
+	-webkit-animation: color-change 15s infinite;
+	-moz-animation: color-change 15s infinite;
 	animation: color-change 15s infinite;
 }
 @-webkit-keyframes color-change{
+	0% { background-color: #fff; }
+	20% { background-color: #ffa; }
+	40% { background-color: #faf; }
+	60% { background-color: #aff; }
+	80% { background-color: #dfd; }
+	100% { background-color: #fff; }
+}
+@-moz-keyframes color-change{
 	0% { background-color: #fff; }
 	20% { background-color: #ffa; }
 	40% { background-color: #faf; }
@@ -56,20 +74,46 @@ body{
 	top: 50%;
 	width: 250px;
 	height: 100px;
+	color: #000;
+	cursor: pointer;
 	font-size: 80px;
 	text-align: center;
 	text-shadow: 0px 0px 20px #111;
-	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%) translateX(-50%);
+	-moz-transform: translateY(-50%) translateX(-50%);
+	transform: translateY(-50%) translateX(-50%);
 	background-color: #999;
 	margin: 5px 20px;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
 	border-radius: 15px;
+	-webkit-box-shadow: 0px 0px 25px 3px #888, inset 0px 0px 10px 1px #111;
+	-moz-box-shadow: 0px 0px 25px 3px #888, inset 0px 0px 10px 1px #111;
 	box-shadow: 0px 0px 25px 3px #888, inset 0px 0px 10px 1px #111;
+	-webkit-transition: all linear 0.25s;
+	-moz-transition: all linear 0.25s;
+	transition: all linear 0.25s;
 }
+.response-box-yes:hover,.response-box-no:hover {
+	width: 260px;
+	height: 105px;
+	font-size: 85px;
+	-webkit-box-shadow: 0px 0px 30px 4px #aaa, inset 0px 0px 5px 1px #111;
+	-moz-box-shadow: 0px 0px 30px 4px #aaa, inset 0px 0px 5px 1px #111;
+	box-shadow: 0px 0px 30px 4px #aaa, inset 0px 0px 5px 1px #111;
+}
+
 .response-box-yes{
-	left: 25%;
+	left: 35%;
+	-webkit-transform: translateY(-50%) translateX(-50%);
+	-moz-transform: translateY(-50%) translateX(-50%);
+	transform: translateY(-50%) translateX(-50%);
 }
 .response-box-no{
-	right: 25%;
+	right: 35%;
+	-webkit-transform: translateY(-50%) translateX(50%);
+	-moz-transform: translateY(-50%) translateX(50%);
+	transform: translateY(-50%) translateX(50%);
 }
 
 .main-body{
@@ -95,24 +139,34 @@ body{
 
 .overall-world,.overall-country,.overall-user{	
 	position: absolute;
-	top: 50%;
+	top: 10%;
+	-webkit-box-shadow: 0px 0px 15px 2px #888;
+	-moz-box-shadow: 0px 0px 15px 2px #888;
 	box-shadow: 0px 0px 15px 2px #888;
 }
 .overall-world{
 	left: 2%;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
 .overall-country{
-	right: 2%;
+	left: 34%;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
 .overall-user{
-	left: 50%;
+	left: 66%;
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	-moz-transform: translateX(-50%) translateY(-50%);
 	transform: translateX(-50%) translateY(-50%);
 }
 
 .detailed-month,.detailed-week,.detailed-hour{
 	position: absolute;
+	-webkit-box-shadow: 0px 0px 20px 3px #666;
+	-moz-box-shadow: 0px 0px 20px 3px #666;
 	box-shadow: 0px 0px 20px 3px #666;
 }
 .detailed-month{
@@ -126,10 +180,14 @@ body{
 .detailed-hour{
 	bottom: -2%;
 	left: 50%;
+	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
 	transform: translateX(-50%);
 }
 
 .main-body.ng-enter,.main-body.ng-leave{
+	-webkit-transition: all 2s ease;
+	-moz-transition: all 2s ease;
 	transition: all 2s ease;
 }
 .main-body.ng-enter{
@@ -145,3 +203,96 @@ body{
 	left: -100%;
 }
 
+.world-ring,.user-ring,.country-ring{
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border: 100px solid #999;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-shadow: 0px 0px 2em  #999,inset 0px 0px 2em 0.5em #333;
+  -moz-box-shadow: 0px 0px 2em  #999,inset 0px 0px 2em 0.5em #333;
+  box-shadow: 0px 0px 2em  #999,inset 0px 0px 2em 0.5em #333;
+  -webkit-transition: box-shadow linear 0.3s;
+  -moz-transition: box-shadow linear 0.3s;
+  transition: box-shadow linear 0.3s;
+}
+.world-ring:hover,.user-ring:hover,.country-ring:hover{
+  -webkit-box-shadow: 0px 0px 2em 1em #999,inset 0px 0px 2em 1em #333;
+  -moz-box-shadow: 0px 0px 2em 1em #999,inset 0px 0px 2em 1em #333;
+  box-shadow: 0px 0px 2em 1em #999,inset 0px 0px 2em 1em #333;
+}
+.world-ring{
+	background-image: url("/img/world.jpg");
+	-webkit-background-size: 100%;
+	-moz-background-size: 100%;
+	background-size: 100%;
+	background-position: center;
+}
+.user-ring{
+	background-image: url("/img/user.jpg");
+	-webkit-background-size: 100%;
+	-moz-background-size: 100%;
+	background-size: 100%;
+	background-position: center;
+}
+.country-ring{
+	-webkit-background-size: 200%;
+	-moz-background-size: 200%;
+	background-size: 200%;
+	background-position: center;
+}
+.yes-label,.no-label{
+  position: absolute;
+  top:50%;
+  width: 30px;
+  height: 50px;
+  font-size: 20px;
+  text-align: center;
+  -webkit-transform: translateY(-40%) ;
+  -moz-transform: translateY(-40%) ;
+  transform: translateY(-40%) ;
+  z-index: 100;
+}
+.yes-label{
+	color: #222;
+	left: -35%;
+}
+.no-label{
+	color: #999;
+	right: -35%;
+}
+.num-label{
+  font-size: 75%;
+}
+.dough-mask-1,.dough-mask-2{
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  overflow: hidden;
+}
+.dough-mask-2{
+  -webkit-transform: translateY(100%) scaleY(-1);
+  -moz-transform: translateY(100%) scaleY(-1);
+  transform: translateY(100%) scaleY(-1);
+}
+.part-dough{
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  width: 50%;
+  height: 100%;
+  border: 100px solid #222;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-transform: translateX(-25%) translateY(-25%) rotate(90deg);
+  -moz-transform: translateX(-25%) translateY(-25%) rotate(90deg);
+  transform: translateX(-25%) translateY(-25%) rotate(90deg);
+  -webkit-clip-path: inset(0px 0px 200px 0px);
+  -moz-clip-path: inset(0px 0px 200px 0px);
+  clip-path: inset(0px 0px 200px 0px);
+}

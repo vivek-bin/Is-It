@@ -1,27 +1,45 @@
 <div>
 <div class="arrow-back" ng-hide="!backAllowed"><a href='#/'>←</a></div>
 	<a href="#detailed/:world">
-    <span fusioncharts class="overall-world"
-		width="350"
-		height="350"
-       type="doughnut2d" 
-       dataSource="{{overallData.worldDataSource}}">
-    </span>
-	</a>
-	<a href="#detailed/:user">
-    <span fusioncharts class="overall-user"
-		width="600"
-		height="420"
-       type="doughnut2d"
-       dataSource="{{overallData.userDataSource}}" >
-    </span>
+    <div class="overall-world">
+		<div class='world-ring'>
+			<div class="yes-label">YES<div class="num-label">{{overallData.worldData.yes}}</div></div>
+			<div class="no-label">NO<div class="num-label">{{overallData.worldData.no}}</div></div>
+			<div class='dough-mask-1'>
+				<div class='part-dough' ng-style="{'transform': 'translateX(-25%) translateY(-25%) rotate(' + overallData.worldData.angle + 'deg)'}"></div>
+			</div>
+			<div class='dough-mask-2'>
+				<div class='part-dough' ng-style="{'transform': 'translateX(-25%) translateY(-25%) rotate(' + overallData.worldData.angle + 'deg)'}"></div>
+			</div>
+		</div>
+    </div>
 	</a>
 	<a href="#detailed/:country">
-    <span fusioncharts class="overall-country"
-		width="350"
-		height="350"
-       type="doughnut2d"
-       dataSource="{{overallData.countryDataSource}}" >
-    </span></a>
+    <div class="overall-user">
+		<div class='country-ring' ng-style="{'background-image': 'url(' + overallData.countryData.country + ')'}">
+			<div class="yes-label">YES<div class="num-label">{{overallData.countryData.yes}}</div></div>
+			<div class="no-label">NO<div class="num-label">{{overallData.countryData.no}}</div></div>
+			<div class='dough-mask-1'>
+				<div class='part-dough' ng-style="{'transform': 'translateX(-25%) translateY(-25%) rotate(' + overallData.countryData.angle + 'deg)'}"></div>
+			</div>
+			<div class='dough-mask-2'>
+				<div class='part-dough' ng-style="{'transform': 'translateX(-25%) translateY(-25%) rotate(' + overallData.countryData.angle + 'deg)'}"></div>
+			</div>
+		</div>
+    </div>
+	</a>
+	<a href="#detailed/:user">
+    <div class="overall-country">
+		<div class='user-ring'>
+			<div class="yes-label">YES<div class="num-label">{{overallData.userData.yes}}</div></div>
+			<div class="no-label">NO<div class="num-label">{{overallData.userData.no}}</div></div>
+			<div class='dough-mask-1'>
+				<div class='part-dough' ng-style="{'transform': 'translateX(-25%) translateY(-25%) rotate(' + overallData.userData.angle + 'deg)'}"></div>
+			</div>
+			<div class='dough-mask-2'>
+				<div class='part-dough' ng-style="{'transform': 'translateX(-25%) translateY(-25%) rotate(' + overallData.userData.angle + 'deg)'}"></div>
+			</div>
+		</div>
+    </div></a>
 	
 </div>

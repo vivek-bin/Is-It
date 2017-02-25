@@ -2,74 +2,27 @@ angular.module('MyApp')
 .service('InputService',function(){
 	this.acceptedInput=false;
 	this.acceptedInputChecked=false;
+	this.refresh=false;
 })
 
 .service('OverallDataService',function(){
 	this.overallData={
 		present: false,
-		worldDataSource: {
-			chart: {
-				defaultCenterLabel: "WORLD",
-				centerLabel: "$value",
-				centerLabelFontSize: 18,
-				centerLabelColor: "#999999",
-				centerlabelhovercolor: "#999999",
-				bgColor: "#0000",
-				bgAlpha: "80",
-				pieRadius: 140,
-				valueFontSize: 15,
-				showlabels: 1,
-				showValues: 0,
-				palettecolors: "#111111,#f9bd19",
-				enableSmartLabels : 0,
-				
-			},
-			data: [{
-				label: "Nothin'",
-				value: 0.00001
-			}]
+		country: "",
+		worldData: {
+			angle: 0,
+			yes: 0,
+			no: 0
 		},
-		countryDataSource: {
-			chart: {
-				defaultCenterLabel: "COUNTRY",
-				centerLabel: "$value",
-				centerLabelFontSize: 18,
-				centerLabelColor: "#999999",
-				centerlabelhovercolor: "#999999",
-				bgColor: "#0000",
-				bgAlpha: "80",
-				pieRadius: 140,
-				valueFontSize: 15,
-				showlabels: 1,
-				showValues: 0,
-				palettecolors: "#111111,#f9bd19",
-				enableSmartLabels : 0,
-			},
-			data: [{
-				label: "Nothin'",
-				value: 0.00001
-			}]
+		countryData: {
+			angle: 0,
+			yes: 0,
+			no: 0
 		},
-		userDataSource: {
-			chart: {
-				defaultCenterLabel: "User",
-				centerLabel: "$value",
-				centerLabelFontSize: 20,
-				centerLabelColor: "#999999",
-				centerlabelhovercolor: "#999999",
-				bgColor: "#0000",
-				bgAlpha: "80",
-				pieRadius: 180,
-				valueFontSize: 18,
-				showlabels: 1,
-				showValues: 0,
-				palettecolors: "#111111,#f9bd19",
-				enableSmartLabels : 0,
-			},
-			data: [{
-				label: "Nothin'",
-				value: 0.00001
-			}]
+		userData: {
+			angle: 0,
+			yes: 0,
+			no: 0
 		}
 	}
 })
@@ -79,13 +32,14 @@ angular.module('MyApp')
 		monthlyDataSource: {
 			chart: {
 				xAxisName: "MONTH",
-				paletteColors: "#0055a2,#1aaf5d",
+				paletteColors: "#0000ff,#330000",
 				bgColor: "#000",
 				bgAlpha: "80%",
 				canvasbgcolor: "#111",
 				canvasbgalpha: "20%",
 				labelfontsize: "12",
-				legendbgcolor: "#111"
+				legendbgcolor: "#111",
+				animation: 0
 			},
 			categories: [{
 				category: [{
@@ -173,13 +127,14 @@ angular.module('MyApp')
 		weeklyDataSource: {
 			chart: {
 				xAxisName: "WEEK",
-				paletteColors: "#0075c2,#1aaf5d",
+				paletteColors: "#0000ff,#330000",
 				bgColor: "#000",
 				bgAlpha: "80%",
 				canvasbgcolor: "#111",
 				canvasbgalpha: "20%",
 				labelfontsize: "12",
-				legendbgcolor: "#111"
+				legendbgcolor: "#111",
+				animation: 0
 			},
 			categories: [{
 				category: [{
@@ -237,13 +192,14 @@ angular.module('MyApp')
 		hourlyDataSource: {
 			chart: {        
 				xAxisName: "Hour",
-				paletteColors: "#0075c2,#1aaf5d",
+				paletteColors: "#0000ff,#330000",
 				bgColor: "#000",
 				bgAlpha: "80%",
 				canvasbgcolor: "#111",
 				canvasbgalpha: "20%",
 				labelfontsize: "12",
-				legendbgcolor: "#111"
+				legendbgcolor: "#111",
+				animation: 0
 			},
 			categories: [{
 				category: [{
