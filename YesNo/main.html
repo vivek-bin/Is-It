@@ -16,18 +16,14 @@
 <link rel='stylesheet' type='text/css' href='style/styles.css' />
 
 </head>
-<body ng-app='MyApp'>
+<body ng-app='MyApp' ng-controller="MainCtrllr">
 
-<div class='heading'>
+<div class='heading' ng-class='{"large-heading": largeHeading, "small-heading": !largeHeading}'>
 Is it?
 </div>
 
+<div ng-view class="main-body"></div>
 
-
-
-<div  class='main-body'>
-<div ng-view class="view-area"></div>
-</div>
 <div class='footer'>
 This site uses cookies to function.
 </div>

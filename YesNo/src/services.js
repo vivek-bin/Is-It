@@ -1,7 +1,7 @@
 angular.module('MyApp')
 .service('InputService',function(){
-	this.acceptInput=false;
-	this.acceptInputChecked=false;
+	this.acceptedInput=false;
+	this.acceptedInputChecked=false;
 })
 
 .service('OverallDataService',function(){

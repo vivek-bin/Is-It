@@ -1,29 +1,35 @@
 angular.module('MyApp')
-.controller('SendInputCtrllr',function($scope,$http,$location,InputService){
-	console.log('in send ip ctrllr')
+.controller('MainCtrllr',function($scope,$http,$location,InputService){
+	$scope.largeHeading=false
 	
 	$http.get('/checkresponse')
 	.then(function(res){
-		console.log(res.data.acceptInput)
-		InputService.acceptInput=res.data.acceptInput;
-		InputService.acceptInputChecked=true;
-		if(InputService.acceptInput){
+		InputService.acceptedInput=res.data.acceptInput;
+		InputService.acceptedInputChecked=true;
+		if(res.data.acceptInput){
 			$location.path('/overall')
 		}
+		console.log("input service init")
 	}
 	,function(error){
 		console.log('AJAX failed while checking');
 	})
+})
+
+.controller('SendInputCtrllr',function($scope,$location,InputService){
+	console.log('in send ip ctrllr')
+	$scope.$parent.largeHeading=true
+	
+	if(InputService.acceptedInputChecked && InputService.acceptedInput){
+		$location.path('/overall')
+	}
 	
 	$scope.sendInput=function(userResponse){
-		console.log('sending response ' + InputService.acceptInput + InputService.acceptInputChecked);
-		if((! InputService.acceptInput) && (InputService.acceptInputChecked)){
+		if(!(InputService.acceptedInputChecked && InputService.acceptedInput)){
 			console.log('sending response ');
-			$http.post('/sendinput',{
-					'userResponse' : userResponse 
-					})
+			$http.post('/sendinput',{'userResponse' : userResponse})
 			.then(function(res){
-				InputService.acceptInput=true;
+				InputService.acceptedInput=true;
 				$location.path('/overall')
 			}
 			,function(error){
@@ -33,8 +39,12 @@ angular.module('MyApp')
 	}
 })
 
-.controller('OverallDataCtrllr',function($scope,$http,OverallDataService){
+.controller('OverallDataCtrllr',function($scope,$http,OverallDataService,InputService){
 	console.log('in overall data ctrllr')
+	
+	$scope.backAllowed=!(InputService.acceptedInputChecked && InputService.acceptedInput)
+	console.log("back allwd "+InputService.acceptedInputChecked+InputService.acceptedInput)
+	$scope.$parent.largeHeading=false
 	$scope.overallData=OverallDataService.overallData
 	if(! OverallDataService.overallData.present){
 		$http.get('/overallscr')
@@ -74,6 +84,8 @@ angular.module('MyApp')
 
 .controller('DetailedDataCtrllr',function($scope,$http,$routeParams,DetailedDataService){
 	console.log('in detail data ctrllr')
+	
+	$scope.$parent.largeHeading=false
 	var present
 	var dataOf=$routeParams.dataOf.substr(1)
 	var setValues=function(){

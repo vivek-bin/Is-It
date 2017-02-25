@@ -165,6 +165,7 @@ app.get('/overallscr',function(req,res){
 	})
 	
 	if(req.cookies.userCountry){
+		overallData.country=req.cookies.userCountry
 		query_where='WHERE User_Country = "' + req.cookies.userCountry + '"'
 		connection.query(query_select + query_where + query_groupby, function(err, rows, fields) {
 			if(err){

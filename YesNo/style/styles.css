@@ -4,7 +4,14 @@
 	left: 50%;
 	transform: translateX(-50%);
 	text-shadow: 1px 1px 14px #fff, -1px -1px 5px #222;
-	font-size:600%;
+	-webkit-transition: all linear 1s; 
+	transition: all linear 0.3s; 
+}
+.heading.large-heading{
+	font-size:130px;
+}
+.heading.small-heading{
+	font-size:90px;
 }
 
 .footer{
@@ -22,8 +29,26 @@ a{
 }
 
 body{
-	background-image: url("http://localhost:8081/img/Texture-Black-Background.jpg");
+	background-image: url("http://localhost:8081/img/Texture-Black-Background-mask.png");
 	background-size: cover;
+	-webkit-animation: color-change 15s infinite; 
+	animation: color-change 15s infinite;
+}
+@-webkit-keyframes color-change{
+	0% { background-color: #fff; }
+	20% { background-color: #ffa; }
+	40% { background-color: #faf; }
+	60% { background-color: #aff; }
+	80% { background-color: #dfd; }
+	100% { background-color: #fff; }
+}
+@keyframes color-change{
+	0% { background-color: #fff; }
+	20% { background-color: #ffa; }
+	40% { background-color: #faf; }
+	60% { background-color: #aff; }
+	80% { background-color: #dfd; }
+	100% { background-color: #fff; }
 }
 
 .response-box-yes,.response-box-no {
@@ -58,6 +83,7 @@ body{
 	position: fixed;
 	top: 20px;
 	font-size: 80px;
+	font-weight: bold;
 	text-shadow: 0px 0px 45px #999,0px 0px 55px #999;
 }
 .arrow-back{
@@ -103,7 +129,19 @@ body{
 	transform: translateX(-50%);
 }
 
-.view-area.ng-show,view-area.ng-hide{
-	transition: all 1s ease;
+.main-body.ng-enter,.main-body.ng-leave{
+	transition: all 2s ease;
+}
+.main-body.ng-enter{
+	left: 100%;
+}
+.main-body.ng-enter-active{
+	left: 0%;
+}
+.main-body.ng-leave{
+	left: 0%;
+}
+.main-body.ng-leave-active{
+	left: -100%;
 }
 
