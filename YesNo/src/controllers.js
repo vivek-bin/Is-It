@@ -76,7 +76,7 @@ angular.module('MyApp')
 			
 			OverallDataService.overallData.countryData.yes=0;
 			OverallDataService.overallData.countryData.no=0;
-			OverallDataService.overallData.countryData.country='/img/flags/'+res.data.overallData.country+'.jpg';
+			OverallDataService.overallData.countryData.country='/img/flags/' + res.data.overallData.country+'.jpg';
 			for(var responseObj of res.data.overallData.countryData){
 				if(responseObj.Response){
 					OverallDataService.overallData.countryData.yes=responseObj.NumResponse
@@ -129,6 +129,7 @@ angular.module('MyApp')
 	}
 	
 	DetailedDataService.prepareData(dataOf)
+	$scope.dataOf='/img/' + DetailedDataService.detailedData.dataOf + '.jpg'
 	$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
 	$scope.weeklyDataSource=DetailedDataService.detailedData.weeklyDataSource
 	$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource
@@ -162,6 +163,7 @@ angular.module('MyApp')
 			}
 			if(dataOf=='country'){
 				DetailedDataService.detailedData.countryData.present=true;
+				DetailedDataService.detailedData.country=res.data.detailedData.country;
 				for(var responseObj of res.data.detailedData.monthlyData){
 					DetailedDataService.detailedData.countryData.monthlyData.dataset[responseObj.Response][responseObj.Month-1]=responseObj.NumResponse
 				}
@@ -186,6 +188,7 @@ angular.module('MyApp')
 			}
 			
 			DetailedDataService.prepareData(dataOf)
+			$scope.dataOf='/img/' + DetailedDataService.detailedData.dataOf + '.jpg'
 			$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
 			$scope.weeklyDataSource=DetailedDataService.detailedData.weeklyDataSource
 			$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource

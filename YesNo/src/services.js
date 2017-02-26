@@ -29,6 +29,7 @@ angular.module('MyApp')
 
 .service('DetailedDataService',function(){
 	this.detailedData={
+		dataOf: '',
 		monthlyDataSource: {
 			labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
 			series: ['NO', 'YES'],
@@ -53,7 +54,7 @@ angular.module('MyApp')
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 			]
 		},
-		
+		country: '',
 		worldData: {
 			present: false,
 			monthlyData: {
@@ -114,16 +115,19 @@ angular.module('MyApp')
 	console.log(this.detailedData)
 	this.prepareData=function(dataOf){
 		if(dataOf=='world'){
+			this.detailedData.dataOf="world"
 			this.detailedData.monthlyDataSource.dataset=this.detailedData.worldData.monthlyData.dataset
 			this.detailedData.weeklyDataSource.dataset=this.detailedData.worldData.weeklyData.dataset
 			this.detailedData.hourlyDataSource.dataset=this.detailedData.worldData.hourlyData.dataset		
 		}
 		if(dataOf=='country'){
+			this.detailedData.dataOf="flags/"+this.detailedData.country
 			this.detailedData.monthlyDataSource.dataset=this.detailedData.countryData.monthlyData.dataset
 			this.detailedData.weeklyDataSource.dataset=this.detailedData.countryData.weeklyData.dataset
 			this.detailedData.hourlyDataSource.dataset=this.detailedData.countryData.hourlyData.dataset
 		}
 		if(dataOf=='user'){
+			this.detailedData.dataOf="user"
 			this.detailedData.monthlyDataSource.dataset=this.detailedData.userData.monthlyData.dataset
 			this.detailedData.weeklyDataSource.dataset=this.detailedData.userData.weeklyData.dataset
 			this.detailedData.hourlyDataSource.dataset=this.detailedData.userData.hourlyData.dataset

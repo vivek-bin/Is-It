@@ -129,12 +129,22 @@ body{
 	font-size: 80px;
 	font-weight: bold;
 	text-shadow: 0px 0px 45px #999,0px 0px 55px #999;
+	-webkit-transition: all linear 0.3s;
+	-moz-transition: all linear 0.3s;
+	transition: all linear 0.3s;
 }
 .arrow-back{
 	left: 5px;
 }
 .arrow-forward{
 	right: 5px;
+}
+.arrow-back:hover,.arrow-forward:hover{
+	font-size: 90px;
+	-webkit-transform: translateY(-8%);
+	-moz-transform: translateY(-8%);
+	transform: translateY(-8%);
+	text-shadow: 0px 0px 45px #ccc,0px 0px 55px #ccc;
 }
 
 .overall-world,.overall-country,.overall-user{	
@@ -189,6 +199,66 @@ body{
 	-webkit-transform: translateX(-50%);
 	-moz-transform: translateX(-50%);
 	transform: translateX(-50%);
+}
+.chart-title{
+	position: absolute;
+	top: 0%;
+	left: 50%;
+	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	transform: translateX(-50%);
+	color: #000;
+	font-size: 15px;
+}
+.chart-legend{
+	position: absolute;
+	top: 50%;
+	right: 3%;
+	height: 45px;
+	width: 60px;
+	-webkit-transform: translateY(-55%);
+	-moz-transform: translateY(-55%);
+	transform: translateY(-55%);
+	color: #000;
+	font-size: 14px;
+	-webkit-padding: 5px;
+	-moz-padding: 5px;
+	padding: 5px;
+	background-color: #232;
+	-webkit-box-shadow: 0px 0px 20px 3px #666;
+	-moz-box-shadow: 0px 0px 20px 3px #666;
+	box-shadow: 0px 0px 20px 3px #666;
+	border: 5px solid #222;
+}
+.chart-legent-yes,.chart-legent-no{
+	position: absolute;
+	right: 15%;
+	height: 12px;
+	width: 12px;
+}
+.chart-legent-yes{
+	top: 15%;
+	background-color: #ebb;
+}
+.chart-legent-no{
+	bottom: 15%;
+	background-color: #aae;
+}
+
+.detailed-dataof{
+	position: absolute;
+	top: 50%;
+	left: 2%;
+	width: 90px;
+	height: 90px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	background-size: cover;
+	background-position: center;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	transform: translateY(-50%);
 }
 
 .main-body.ng-enter,.main-body.ng-leave{

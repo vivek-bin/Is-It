@@ -228,17 +228,18 @@ app.get('/detailedscr',function(req,res){
 	console.log('in detailed path')
 	
 	var query_where=''
+	var detailedData={};
 	
 	if(req.query.dataOf=='world'){
 		query_where=''
 	}else if(req.query.dataOf=='country'){
 		query_where='WHERE User_Country = "' + req.cookies.userCountry + '"'
+		detailedData.country=req.cookies.userCountry
 	}
 	else if(req.query.dataOf=='user'){
 		query_where='WHERE User_ID = "' + req.cookies.userId + '"'
 	}
 
-	var detailedData={};
 	
 	var connection = mysql.createConnection({
 	  host: 'localhost',
@@ -251,7 +252,6 @@ app.get('/detailedscr',function(req,res){
 		if (err) console.log('error connecting...')
 		else console.log('You are now connected...')
 	})
-	
 	query_select='SELECT MONTH(Resp_Date) AS Month, Response, COUNT(Response) AS NumResponse FROM userresponses '
 	query_groupby=' GROUP BY Response, MONTH(Resp_Date);'
 	connection.query(query_select + query_where + query_groupby , function(err, rows, fields) {
