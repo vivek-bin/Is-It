@@ -2,9 +2,9 @@
 	position: fixed;
 	top: -2%;
 	left: 50%;
-	-webkit-transform: translateX(-50%);
-	-moz-transform: translateX(-50%);
-	transform: translateX(-50%);
+	-webkit-transform: translate(-50%,0%);
+	-moz-transform: translate(-50%,0%);
+	transform: translate(-50%,0%);
 	text-shadow: 1px 1px 14px #fff, -1px -1px 5px #222;
 	-webkit-transition: all linear 0.3s; 
 	-moz-transition: all linear 0.3s; 
@@ -21,9 +21,9 @@
 	position: fixed;
 	bottom: 0;
 	left: 50%;
-	-webkit-transform: translateX(-50%);
-	-moz-transform: translateX(-50%);
-	transform: translateX(-50%);
+	-webkit-transform: translate(-50%,0%);
+	-moz-transform: translate(-50%,0%);
+	transform: translate(-50%,0%);
 	font-size:70%;
 	color: #fff;
 }
@@ -79,9 +79,6 @@ body{
 	font-size: 80px;
 	text-align: center;
 	text-shadow: 0px 0px 20px #111;
-	-webkit-transform: translateY(-50%) translateX(-50%);
-	-moz-transform: translateY(-50%) translateX(-50%);
-	transform: translateY(-50%) translateX(-50%);
 	background-color: #999;
 	margin: 5px 20px;
 	-webkit-border-radius: 15px;
@@ -105,15 +102,15 @@ body{
 
 .response-box-yes{
 	left: 35%;
-	-webkit-transform: translateY(-50%) translateX(-50%);
-	-moz-transform: translateY(-50%) translateX(-50%);
-	transform: translateY(-50%) translateX(-50%);
+	-webkit-transform: translate(-50%,-50%);
+	-moz-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%);
 }
 .response-box-no{
 	right: 35%;
-	-webkit-transform: translateY(-50%) translateX(50%);
-	-moz-transform: translateY(-50%) translateX(50%);
-	transform: translateY(-50%) translateX(50%);
+	-webkit-transform: translate(50%,-50%);
+	-moz-transform: translate(50%,-50%);
+	transform: translate(50%,-50%);
 }
 
 .main-body{
@@ -141,9 +138,9 @@ body{
 }
 .arrow-back:hover,.arrow-forward:hover{
 	font-size: 90px;
-	-webkit-transform: translateY(-8%);
-	-moz-transform: translateY(-8%);
-	transform: translateY(-8%);
+	-webkit-transform: translate(0%,-8%);
+	-moz-transform: translate(0%,-8%);
+	transform: translate(0%,-8%);
 	text-shadow: 0px 0px 45px #ccc,0px 0px 55px #ccc;
 }
 
@@ -156,21 +153,21 @@ body{
 }
 .overall-world{
 	left: 2%;
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	transform: translateY(-50%);
+	-webkit-transform: translate(0%,-50%);
+	-moz-transform: translate(0%,-50%);
+	transform: translate(0%,-50%);
 }
 .overall-country{
 	left: 34%;
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	transform: translateY(-50%);
+	-webkit-transform: translate(0%,-50%);
+	-moz-transform: translate(0%,-50%);
+	transform: translate(0%,-50%);
 }
 .overall-user{
 	left: 66%;
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	-moz-transform: translateX(-50%) translateY(-50%);
-	transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translate(-50%,-50%);
+	-moz-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%);
 }
 
 .detailed-month,.detailed-week,.detailed-hour{
@@ -196,17 +193,17 @@ body{
 	bottom: 2%;
 	left: 50%;
 	width: 1000px;
-	-webkit-transform: translateX(-50%);
-	-moz-transform: translateX(-50%);
-	transform: translateX(-50%);
+	-webkit-transform: translate(-50%,0%);
+	-moz-transform: translate(-50%,0%);
+	transform: translate(-50%,0%);
 }
 .chart-title{
 	position: absolute;
 	top: 0%;
 	left: 50%;
-	-webkit-transform: translateX(-50%);
-	-moz-transform: translateX(-50%);
-	transform: translateX(-50%);
+	-webkit-transform: translate(-50%,0%);
+	-moz-transform: translate(-50%,0%);
+	transform: translate(-50%,0%);
 	color: #000;
 	font-size: 15px;
 }
@@ -216,9 +213,9 @@ body{
 	right: 3%;
 	height: 45px;
 	width: 60px;
-	-webkit-transform: translateY(-55%);
-	-moz-transform: translateY(-55%);
-	transform: translateY(-55%);
+	-webkit-transform: translate(0%,-55%);
+	-moz-transform: translate(0%,-55%);
+	transform: translate(0%,-55%);
 	color: #000;
 	font-size: 14px;
 	-webkit-padding: 5px;
@@ -256,9 +253,9 @@ body{
 	border-radius: 50%;
 	background-size: cover;
 	background-position: center;
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	transform: translateY(-50%);
+	-webkit-transform: translate(0%,-50%);
+	-moz-transform: translate(0%,-50%);
+	transform: translate(0%,-50%);
 }
 
 .main-body.ng-enter,.main-body.ng-leave{
@@ -326,9 +323,9 @@ body{
   height: 50px;
   font-size: 20px;
   text-align: center;
-  -webkit-transform: translateY(-40%) ;
-  -moz-transform: translateY(-40%) ;
-  transform: translateY(-40%) ;
+  -webkit-transform: translate(0%,-40%);
+  -moz-transform: translate(0%,-40%);
+  transform: translate(0%,-40%);
   z-index: 100;
 }
 .yes-label{
@@ -351,23 +348,21 @@ body{
   overflow: hidden;
 }
 .dough-mask-2{
-  -webkit-transform: translateY(100%) scaleY(-1);
-  -moz-transform: translateY(100%) scaleY(-1);
-  transform: translateY(100%) scaleY(-1);
+  -webkit-transform: translate(0%,100%) scaleY(-1);
+  -moz-transform: translate(0%,100%) scaleY(-1);
+  transform: translate(0%,100%) scaleY(-1);
 }
 .part-dough{
-  position: absolute;
-  top: 50%;
-  left: 25%;
   width: 50%;
   height: 100%;
   border: 100px solid #222;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
-  -webkit-transform: translateX(-25%) translateY(-25%) rotate(90deg);
-  -moz-transform: translateX(-25%) translateY(-25%) rotate(90deg);
-  transform: translateX(-25%) translateY(-25%) rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
   -webkit-clip-path: inset(0px 0px 200px 0px);
   -moz-clip-path: inset(0px 0px 200px 0px);
   clip-path: inset(0px 0px 200px 0px);

@@ -60,51 +60,55 @@ angular.module('MyApp')
 			
 			OverallDataService.overallData.worldData.yes=0;
 			OverallDataService.overallData.worldData.no=0;
-			for(var responseObj of res.data.overallData.worldData){
-				if(responseObj.Response){
-					OverallDataService.overallData.worldData.yes=responseObj.NumResponse
+			for(var i=0;i<res.data.overallData.worldData.length;++i){
+				if(res.data.overallData.worldData[i].Response){
+					OverallDataService.overallData.worldData.yes=res.data.overallData.worldData[i].NumResponse
 				}
 				else{
-					OverallDataService.overallData.worldData.no=responseObj.NumResponse
+					OverallDataService.overallData.worldData.no=res.data.overallData.worldData[i].NumResponse
 				}
 			}
-			OverallDataService.overallData.worldData.angle=90
+			OverallDataService.overallData.worldData.rotation=90
 			if(OverallDataService.overallData.worldData.no+OverallDataService.overallData.worldData.yes > 0){
-				OverallDataService.overallData.worldData.angle=180*OverallDataService.overallData.worldData.yes
-				OverallDataService.overallData.worldData.angle/=OverallDataService.overallData.worldData.no+OverallDataService.overallData.worldData.yes
+				OverallDataService.overallData.worldData.rotation=180*OverallDataService.overallData.worldData.yes
+				OverallDataService.overallData.worldData.rotation/=OverallDataService.overallData.worldData.no+OverallDataService.overallData.worldData.yes
 			}
+			OverallDataService.overallData.worldData.rotation='rotate(' + OverallDataService.overallData.worldData.rotation + 'deg)'
 			
 			OverallDataService.overallData.countryData.yes=0;
 			OverallDataService.overallData.countryData.no=0;
 			OverallDataService.overallData.countryData.country='/img/flags/' + res.data.overallData.country+'.jpg';
-			for(var responseObj of res.data.overallData.countryData){
-				if(responseObj.Response){
-					OverallDataService.overallData.countryData.yes=responseObj.NumResponse
+			for(var i=0;i<res.data.overallData.countryData.length;++i){
+				if(res.data.overallData.countryData[i].Response){
+					OverallDataService.overallData.countryData.yes=res.data.overallData.countryData[i].NumResponse
 				}
 				else{
-					OverallDataService.overallData.countryData.no=responseObj.NumResponse
+					OverallDataService.overallData.countryData.no=res.data.overallData.countryData[i].NumResponse
 				}
 			}
-			OverallDataService.overallData.countryData.angle=90
+			OverallDataService.overallData.countryData.rotation=90
 			if(OverallDataService.overallData.countryData.no+OverallDataService.overallData.countryData.yes > 0){
-				OverallDataService.overallData.countryData.angle=180*OverallDataService.overallData.countryData.yes;
-				OverallDataService.overallData.countryData.angle/=OverallDataService.overallData.countryData.no+OverallDataService.overallData.countryData.yes;
+				OverallDataService.overallData.countryData.rotation=180*OverallDataService.overallData.countryData.yes;
+				OverallDataService.overallData.countryData.rotation/=OverallDataService.overallData.countryData.no+OverallDataService.overallData.countryData.yes;
 			}
+			OverallDataService.overallData.countryData.rotation='rotate(' + OverallDataService.overallData.countryData.rotation + 'deg)'
+			
 			OverallDataService.overallData.userData.yes=0;
 			OverallDataService.overallData.userData.no=0;
-			for(var responseObj of res.data.overallData.userData){
-				if(responseObj.Response){
-					OverallDataService.overallData.userData.yes=responseObj.NumResponse
+			for(var i=0;i<res.data.overallData.userData.length ;++i){
+				if(res.data.overallData.userData[i].Response){
+					OverallDataService.overallData.userData.yes=res.data.overallData.userData[i].NumResponse
 				}
 				else{
-					OverallDataService.overallData.userData.no=responseObj.NumResponse
+					OverallDataService.overallData.userData.no=res.data.overallData.userData[i].NumResponse
 				}
 			}
-			OverallDataService.overallData.userData.angle=90
+			OverallDataService.overallData.userData.rotation=90
 			if(OverallDataService.overallData.userData.no+OverallDataService.overallData.userData.yes > 0){
-				OverallDataService.overallData.userData.angle=180*OverallDataService.overallData.userData.yes;
-				OverallDataService.overallData.userData.angle/=OverallDataService.overallData.userData.no+OverallDataService.overallData.userData.yes;
+				OverallDataService.overallData.userData.rotation=180*OverallDataService.overallData.userData.yes;
+				OverallDataService.overallData.userData.rotation/=OverallDataService.overallData.userData.no+OverallDataService.overallData.userData.yes;
 			}
+			OverallDataService.overallData.userData.rotation='rotate(' + OverallDataService.overallData.userData.rotation + 'deg)'
 			
 			$scope.overallData=OverallDataService.overallData
 		}
@@ -149,41 +153,44 @@ angular.module('MyApp')
 		console.log(dataOf+' fetching')
 		$http.get('/detailedscr',{params:{'dataOf' : dataOf}})
 		.then(function(res){
+			var monthly = res.data.detailedData.monthlyData
+			var weekly = res.data.detailedData.weeklyData
+			var hourly = res.data.detailedData.hourlyData
 			if(dataOf=='world'){
 				DetailedDataService.detailedData.worldData.present=true;
-				for(var responseObj of res.data.detailedData.monthlyData){
-					DetailedDataService.detailedData.worldData.monthlyData.dataset[responseObj.Response][responseObj.Month-1]=responseObj.NumResponse
+				for(var i=0; i<monthly.length;++i){
+					DetailedDataService.detailedData.worldData.monthlyData.dataset[monthly[i].Response][monthly[i].Month-1]=monthly[i].NumResponse
 				}
-				for(var responseObj of res.data.detailedData.weeklyData){
-					DetailedDataService.detailedData.worldData.weeklyData.dataset[responseObj.Response][responseObj.WeekDay]=responseObj.NumResponse
+				for(var i=0; i<weekly.length;++i){
+					DetailedDataService.detailedData.worldData.weeklyData.dataset[weekly[i].Response][weekly[i].WeekDay]=weekly[i].NumResponse
 				}
-				for(var responseObj of res.data.detailedData.hourlyData){
-					DetailedDataService.detailedData.worldData.hourlyData.dataset[responseObj.Response][responseObj.Hour]=responseObj.NumResponse
+				for(var i=0; i<hourly.length;++i){
+					DetailedDataService.detailedData.worldData.hourlyData.dataset[hourly[i].Response][hourly[i].Hour]=hourly[i].NumResponse
 				}
 			}
 			if(dataOf=='country'){
 				DetailedDataService.detailedData.countryData.present=true;
 				DetailedDataService.detailedData.country=res.data.detailedData.country;
-				for(var responseObj of res.data.detailedData.monthlyData){
-					DetailedDataService.detailedData.countryData.monthlyData.dataset[responseObj.Response][responseObj.Month-1]=responseObj.NumResponse
+				for(var i=0; i<monthly.length;++i){
+					DetailedDataService.detailedData.countryData.monthlyData.dataset[monthly[i].Response][monthly[i].Month-1]=monthly[i].NumResponse
 				}
-				for(var responseObj of res.data.detailedData.weeklyData){
-					DetailedDataService.detailedData.countryData.weeklyData.dataset[responseObj.Response][responseObj.WeekDay]=responseObj.NumResponse
+				for(var i=0; i<weekly.length;++i){
+					DetailedDataService.detailedData.countryData.weeklyData.dataset[weekly[i].Response][weekly[i].WeekDay]=weekly[i].NumResponse
 				}
-				for(var responseObj of res.data.detailedData.hourlyData){
-					DetailedDataService.detailedData.countryData.hourlyData.dataset[responseObj.Response][responseObj.Hour]=responseObj.NumResponse
+				for(var i=0; i<hourly.length;++i){
+					DetailedDataService.detailedData.countryData.hourlyData.dataset[hourly[i].Response][hourly[i].Hour]=hourly[i].NumResponse
 				}
 			}
 			if(dataOf=='user'){
 				DetailedDataService.detailedData.userData.present=true;
-				for(var responseObj of res.data.detailedData.monthlyData){
-					DetailedDataService.detailedData.userData.monthlyData.dataset[responseObj.Response][responseObj.Month-1]=responseObj.NumResponse
+				for(var i=0; i<monthly.length;++i){
+					DetailedDataService.detailedData.userData.monthlyData.dataset[monthly[i].Response][monthly[i].Month-1]=monthly[i].NumResponse
 				}
-				for(var responseObj of res.data.detailedData.weeklyData){
-					DetailedDataService.detailedData.userData.weeklyData.dataset[responseObj.Response][responseObj.WeekDay]=responseObj.NumResponse
+				for(var i=0; i<weekly.length;++i){
+					DetailedDataService.detailedData.userData.weeklyData.dataset[weekly[i].Response][weekly[i].WeekDay]=weekly[i].NumResponse
 				}
-				for(var responseObj of res.data.detailedData.hourlyData){
-					DetailedDataService.detailedData.userData.hourlyData.dataset[responseObj.Response][responseObj.Hour]=responseObj.NumResponse
+				for(var i=0; i<hourly.length;++i){
+					DetailedDataService.detailedData.userData.hourlyData.dataset[hourly[i].Response][hourly[i].Hour]=hourly[i].NumResponse
 				}
 			}
 			
