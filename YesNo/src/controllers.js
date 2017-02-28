@@ -1,51 +1,24 @@
 angular.module('MyApp')
-.controller('MainCtrllr',function($scope,$http,$location,InputService){
+.controller('MainCtrllr',function($scope,InputService){
 	$scope.largeHeading=false
-	
-	$http.get('/checkresponse')
-	.then(function(res){
-		InputService.acceptedInput=res.data.acceptInput;
-		InputService.acceptedInputChecked=true;
-		if(res.data.acceptInput){
-			$location.path('/overall')
-		}
-		console.log("input service init")
-	}
-	,function(error){
-		console.log('AJAX failed while checking');
-	})
+	InputService.checkResponded()
 })
 
-.controller('SendInputCtrllr',function($scope,$http,$location,InputService){
+.controller('SendInputCtrllr',function($scope,InputService){
 	console.log('in send ip ctrllr')
 	$scope.$parent.largeHeading=true
 	
-	if(InputService.acceptedInputChecked && InputService.acceptedInput){
-		$location.path('/overall')
-	}
+	InputService.routeToOverall();
 	
 	$scope.sendInput=function(userResponse){
-		console.log('sending ip')
-		if(! (InputService.acceptedInputChecked && InputService.acceptedInput)){
-			console.log('sending response ');
-			$http.post('/sendinput',{'userResponse' : userResponse})
-			.then(function(res){
-				InputService.acceptedInput=true;
-				InputService.refreshOverall=true;
-				InputService.refreshDetailed=true;
-				$location.path('/overall')
-			}
-			,function(error){
-				console.log('AJAX failed while sending');
-			})
-		}
+		InputService.sendInput(userResponse)
 	}
 })
 
 .controller('OverallDataCtrllr',function($scope,$http,OverallDataService,InputService){
 	console.log('in overall data ctrllr')
 	
-	$scope.backAllowed=!(InputService.acceptedInputChecked && InputService.acceptedInput)
+	$scope.backAllowed=InputService.backAllowed()
 	
 	if(InputService.refreshOverall===true){
 		InputService.refreshOverall=false
@@ -132,12 +105,6 @@ angular.module('MyApp')
 		DetailedDataService.detailedData.userData.present=false
 	}
 	
-	DetailedDataService.prepareData(dataOf)
-	$scope.dataOf='/img/' + DetailedDataService.detailedData.dataOf + '.jpg'
-	$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
-	$scope.weeklyDataSource=DetailedDataService.detailedData.weeklyDataSource
-	$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource
-	
 	var present
 	if(dataOf=='world'){
 		present=DetailedDataService.detailedData.worldData.present;
@@ -148,8 +115,14 @@ angular.module('MyApp')
 	if(dataOf=='user'){
 		present=DetailedDataService.detailedData.userData.present;
 	}
-	console.log(dataOf)
-	if(! present){
+	if(present){
+		DetailedDataService.prepareData(dataOf)
+		$scope.dataOf='/img/' + DetailedDataService.detailedData.dataOf + '.jpg'
+		$scope.monthlyDataSource=DetailedDataService.detailedData.monthlyDataSource
+		$scope.weeklyDataSource=DetailedDataService.detailedData.weeklyDataSource
+		$scope.hourlyDataSource=DetailedDataService.detailedData.hourlyDataSource
+	}
+	else{
 		console.log(dataOf+' fetching')
 		$http.get('/detailedscr',{params:{'dataOf' : dataOf}})
 		.then(function(res){

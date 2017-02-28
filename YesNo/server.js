@@ -9,8 +9,7 @@ app.use(cookieParser())
 app.use(bodyParser.json());
 
 app.use(function(req,res,next){
-	console.log(req.cookies.userId)
-	console.log(req.cookies.userCountry)
+	console.log(req.path)
 	if(!req.cookies.userId){
 		var connection = mysql.createConnection({
 		  host: 'localhost',
@@ -76,6 +75,11 @@ app.use(function(req,res,next){
 				console.log('new user country');
 				next()
 			});
+			response.on('error', function(){
+				res.cookie('userCountry','00', { maxAge: (1 * 24 * 60 * 60 * 1000), httpOnly: true })
+				console.log('new user country');
+				next()
+			});
 		});
 		req.on('error', function(e){
 			console.log('problem with request:' + e.message);
@@ -88,9 +92,6 @@ app.use(function(req,res,next){
 })
 
 app.get('/checkresponse',function(req,res){
-	//check if user has responded for today
-	console.log('in initapp path    '+req.cookies.userCountry+'    '+req.cookies.userId)
-
 	var connection = mysql.createConnection({
 	  host: 'localhost',
 	  port: '3306',
@@ -117,8 +118,6 @@ app.get('/checkresponse',function(req,res){
 })
 
 app.post('/sendinput',function(req,res){
-	console.log('in sendinput path')
-	
 	if(req.cookies.userId){
 		var connection = mysql.createConnection({
 		  host: 'localhost',
@@ -132,14 +131,14 @@ app.post('/sendinput',function(req,res){
 			if (err) console.log('error connecting...')
 			else console.log('You are now connected...')
 		})
-		console.log(req.body);
+		
 		var query='INSERT INTO userresponses (Resp_Date,Resp_Time,User_ID,User_Country,Response) VALUES('
 				+ 'CURRENT_DATE' + ',' 
 				+ 'CURRENT_TIME' + ',"'
 				+ req.cookies.userId + '","'
 				+ req.cookies.userCountry + '",'
 				+ req.body.userResponse + ');'
-		console.log(query);
+		
 		connection.query(query,function(err,rows,fields){
 			if(err){
 				console.log('error while inserting new response')
@@ -157,8 +156,6 @@ app.post('/sendinput',function(req,res){
 })
 
 app.get('/overallscr',function(req,res){
-	console.log('in overall path')
-	
 	var overallData={};
 	
 	query_select='SELECT Response, COUNT(Response) AS NumResponse FROM userresponses '
@@ -234,7 +231,6 @@ app.get('/detailedscr',function(req,res){
 		query_where=''
 	}else if(req.query.dataOf=='country'){
 		query_where='WHERE User_Country = "' + req.cookies.userCountry + '"'
-		detailedData.country=req.cookies.userCountry
 	}
 	else if(req.query.dataOf=='user'){
 		query_where='WHERE User_ID = "' + req.cookies.userId + '"'
@@ -260,6 +256,7 @@ app.get('/detailedscr',function(req,res){
 		}
 		else{
 			detailedData.present=true
+			detailedData.country=req.cookies.userCountry
 			detailedData.monthlyData=rows;
 		}
 	})
@@ -284,7 +281,7 @@ app.get('/detailedscr',function(req,res){
 		else{
 			detailedData.hourlyData=rows;
 		}
-		console.log("detailedData sending")
+		
 		res.send({detailedData: detailedData})
 		connection.end(function (err){
 			if(err)		console.log('error while ending connection')
@@ -295,12 +292,10 @@ app.get('/detailedscr',function(req,res){
 })
 
 app.get('/',function(req,res){
-//	console.log('in home path'+__dirname + "/main.html")
 	res.sendFile(__dirname + "/main.html")
 })
 
 app.get('*',function(req,res){
-//	console.log('in '+ __dirname + req.path +' path')
 	res.sendFile(__dirname + req.path)
 })
 

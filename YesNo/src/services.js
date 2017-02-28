@@ -1,8 +1,49 @@
 angular.module('MyApp')
-.service('InputService',function(){
-	this.acceptedInput=false;
-	this.acceptedInputChecked=false;
-	this.refresh=false;
+.service('InputService',function($http,$location){
+	var InputService=this
+	InputService.acceptedInput=false;
+	InputService.acceptedInputChecked=false;
+	InputService.refreshOverall=false;
+	InputService.refreshDetailed=false;
+	
+	InputService.routeToOverall=function(){
+		if(InputService.acceptedInputChecked===true && InputService.acceptedInput===true){
+			$location.path('/overall')
+		}
+	}
+	
+	InputService.backAllowed=function(){
+		return !(InputService.acceptedInputChecked && InputService.acceptedInput);
+	}
+	
+	InputService.checkResponded = function(){
+		$http.get('/checkresponse')
+		.then(function(res){
+			InputService.acceptedInput=res.data.acceptInput;
+			InputService.acceptedInputChecked=true;
+			InputService.routeToOverall();
+		}
+		,function(error){
+			console.log('AJAX failed while checking');
+		});
+	}
+	
+	InputService.sendInput=function(userResponse){
+		console.log('sending ip')
+		if(! (InputService.acceptedInputChecked && InputService.acceptedInput)){
+			console.log('sending response ');
+			$http.post('/sendinput',{'userResponse' : userResponse})
+			.then(function(res){
+				InputService.acceptedInput=true;
+				InputService.refreshOverall=true;
+				InputService.refreshDetailed=true;
+				InputService.routeToOverall();
+			}
+			,function(error){
+				console.log('AJAX failed while sending');
+			})
+		}
+	}
 })
 
 .service('OverallDataService',function(){
