@@ -229,13 +229,15 @@ app.get('/detailedscr',function(req,res){
 	
 	if(req.query.dataOf=='world'){
 		query_where=''
+		detailedData.dataOf='world'
 	}else if(req.query.dataOf=='country'){
 		query_where='WHERE User_Country = "' + req.cookies.userCountry + '"'
+		detailedData.dataOf=req.cookies.userCountry
 	}
 	else if(req.query.dataOf=='user'){
 		query_where='WHERE User_ID = "' + req.cookies.userId + '"'
+		detailedData.dataOf='user'
 	}
-
 	
 	var connection = mysql.createConnection({
 	  host: 'localhost',
@@ -256,7 +258,6 @@ app.get('/detailedscr',function(req,res){
 		}
 		else{
 			detailedData.present=true
-			detailedData.country=req.cookies.userCountry
 			detailedData.monthlyData=rows;
 		}
 	})

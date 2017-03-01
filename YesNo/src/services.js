@@ -17,15 +17,17 @@ angular.module('MyApp')
 	}
 	
 	InputService.checkResponded = function(){
-		$http.get('/checkresponse')
-		.then(function(res){
-			InputService.acceptedInput=res.data.acceptInput;
-			InputService.acceptedInputChecked=true;
-			InputService.routeToOverall();
+		if(! InputService.acceptedInputChecked){
+			$http.get('/checkresponse')
+			.then(function(res){
+				InputService.acceptedInput=res.data.acceptInput;
+				InputService.acceptedInputChecked=true;
+				InputService.routeToOverall();
+			}
+			,function(error){
+				console.log('AJAX failed while checking');
+			});
 		}
-		,function(error){
-			console.log('AJAX failed while checking');
-		});
 	}
 	
 	InputService.sendInput=function(userResponse){
@@ -46,132 +48,196 @@ angular.module('MyApp')
 	}
 })
 
-.service('OverallDataService',function(){
-	this.overallData={
-		present: false,
-		country: "",
-		worldData: {
-			angle: 0,
-			yes: 0,
-			no: 0
-		},
-		countryData: {
-			angle: 0,
-			yes: 0,
-			no: 0
-		},
-		userData: {
-			angle: 0,
-			yes: 0,
-			no: 0
+.service('OverallDataService',function($http){
+	var OverallDataService=this;
+	OverallDataService.overallDataPromise=null;
+	
+	OverallDataService.getRotation=function(yeses,noes){
+		if((noes + yeses) > 0){
+			return 'rotate(' + ((180*yeses)/(noes+yeses)) + 'deg)'
 		}
+		else{
+			return 'rotate(90deg)'
+		}
+	}
+	
+	OverallDataService.refreshData = function(){
+		OverallDataService.overallDataPromise=null
+	}
+	
+	OverallDataService.getOverallData = function(){
+		if(OverallDataService.overallDataPromise===null){
+			OverallDataService.overallDataPromise=$http.get('/overallscr').then(function(res){
+				var overallData={
+					country: '',
+					worldData: {
+						yes: 0,
+						no: 0,
+						angle: ''
+					},
+					countryData: {
+						yes: 0,
+						no: 0,
+						angle: ''
+					},
+					userData: {
+						yes: 0,
+						no: 0,
+						angle: ''
+					}
+				}
+				
+				overallData.country='/img/flags/' + res.data.overallData.country + '.jpg';
+				for(var i=0;i<res.data.overallData.worldData.length;++i){
+					if(res.data.overallData.worldData[i].Response){
+						overallData.worldData.yes=res.data.overallData.worldData[i].NumResponse
+					}
+					else{
+						overallData.worldData.no=res.data.overallData.worldData[i].NumResponse
+					}
+				}
+				overallData.worldData.rotation=OverallDataService.getRotation(overallData.worldData.yes,overallData.worldData.no)
+
+				for(var i=0;i<res.data.overallData.countryData.length;++i){
+					if(res.data.overallData.countryData[i].Response){
+						overallData.countryData.yes=res.data.overallData.countryData[i].NumResponse
+					}
+					else{
+						overallData.countryData.no=res.data.overallData.countryData[i].NumResponse
+					}
+				}
+				overallData.countryData.rotation=OverallDataService.getRotation(overallData.countryData.yes,overallData.countryData.no)
+				
+				for(var i=0;i<res.data.overallData.userData.length ;++i){
+					if(res.data.overallData.userData[i].Response){
+						overallData.userData.yes=res.data.overallData.userData[i].NumResponse
+					}
+					else{
+						overallData.userData.no=res.data.overallData.userData[i].NumResponse
+					}
+				}
+				overallData.userData.rotation=OverallDataService.getRotation(overallData.userData.yes,overallData.userData.no)
+				
+				return overallData;
+			},
+			function(error){
+				return error
+			});
+		}
+		return OverallDataService.overallDataPromise;
 	}
 })
 
-.service('DetailedDataService',function(){
-	this.detailedData={
-		dataOf: '',
-		monthlyDataSource: {
-			labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-			series: ['NO', 'YES'],
-			dataset: [
-				[0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0]
-			]
-		},
-		weeklyDataSource: {
-			labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-			series: ['NO', 'YES'],
-			dataset: [
-				[0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0]
-			]
-		},
-		hourlyDataSource: {
-			labels: ["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],
-			series: ['NO', 'YES'],
-			dataset: [
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-			]
-		},
-		country: '',
-		worldData: {
-			present: false,
-			monthlyData: {
-				dataset: [
-				[0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0]
-			]},
-			weeklyData: {
-				dataset: [
-				[0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0]
-			]},
-			hourlyData: {
-				dataset: [
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-			]}
-		},
-		countryData: {
-			present: false,
-			monthlyData: {
-				dataset: [
-				[0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0]
-			]},
-			weeklyData: {
-				dataset: [
-				[0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0]
-			]},
-			hourlyData: {
-				dataset: [
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-			]}
-		},
-		userData: {
-			present: false,
-			monthlyData: {
-				dataset: [
-				[0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0]
-			]},
-			weeklyData: {
-				dataset: [
-				[0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0]
-			]},
-			hourlyData: {
-				dataset: [
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-			]}
-		}
+.service('DetailedDataService',function($http){
+	var DetailedDataService=this
+	DetailedDataService.userDetailedPromise=null
+	DetailedDataService.countryDetailedPromise=null
+	DetailedDataService.worldDetailedPromise=null
 	
+	DetailedDataService.refreshData=function(){
+		DetailedDataService.userDetailedPromise=null
+		DetailedDataService.countryDetailedPromise=null
+		DetailedDataService.worldDetailedPromise=null
 	}
 	
-	console.log(this.detailedData)
-	this.prepareData=function(dataOf){
-		if(dataOf=='world'){
-			this.detailedData.dataOf="world"
-			this.detailedData.monthlyDataSource.dataset=this.detailedData.worldData.monthlyData.dataset
-			this.detailedData.weeklyDataSource.dataset=this.detailedData.worldData.weeklyData.dataset
-			this.detailedData.hourlyDataSource.dataset=this.detailedData.worldData.hourlyData.dataset		
+	DetailedDataService.getCountryData=function(){
+		if(DetailedDataService.countryDetailedPromise===null){
+			DetailedDataService.countryDetailedPromise=$http.get('/detailedscr',{params:{'dataOf' : 'country'}})
+			.then(function(res){
+				var monthly = res.data.detailedData.monthlyData
+				var weekly = res.data.detailedData.weeklyData
+				var hourly = res.data.detailedData.hourlyData
+				
+				var detailedData={
+					dataOf: 'flags/' + res.data.detailedData.dataOf,
+					monthlyData: [ [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0] ],
+					weeklyData: [ [0,0,0,0,0,0,0], [0,0,0,0,0,0,0] ],
+					hourlyData: [ [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] ]
+				}
+				
+				for(var i=0; i<monthly.length;++i){
+					detailedData.monthlyData[monthly[i].Response][monthly[i].Month-1]=monthly[i].NumResponse
+				}
+				for(var i=0; i<weekly.length;++i){
+					detailedData.weeklyData[weekly[i].Response][weekly[i].WeekDay]=weekly[i].NumResponse
+				}
+				for(var i=0; i<hourly.length;++i){
+					detailedData.hourlyData[hourly[i].Response][hourly[i].Hour]=hourly[i].NumResponse
+				}
+				
+				return detailedData;
+			}
+			,function(error){
+				return error
+			})
 		}
-		if(dataOf=='country'){
-			this.detailedData.dataOf="flags/"+this.detailedData.country
-			this.detailedData.monthlyDataSource.dataset=this.detailedData.countryData.monthlyData.dataset
-			this.detailedData.weeklyDataSource.dataset=this.detailedData.countryData.weeklyData.dataset
-			this.detailedData.hourlyDataSource.dataset=this.detailedData.countryData.hourlyData.dataset
-		}
-		if(dataOf=='user'){
-			this.detailedData.dataOf="user"
-			this.detailedData.monthlyDataSource.dataset=this.detailedData.userData.monthlyData.dataset
-			this.detailedData.weeklyDataSource.dataset=this.detailedData.userData.weeklyData.dataset
-			this.detailedData.hourlyDataSource.dataset=this.detailedData.userData.hourlyData.dataset
-		}
+		return DetailedDataService.countryDetailedPromise
 	}
+	
+	DetailedDataService.getUserData=function(){
+		if(DetailedDataService.userDetailedPromise===null){
+			DetailedDataService.userDetailedPromise=$http.get('/detailedscr',{params:{'dataOf' : 'user'}})
+			.then(function(res){
+				var monthly = res.data.detailedData.monthlyData
+				var weekly = res.data.detailedData.weeklyData
+				var hourly = res.data.detailedData.hourlyData
+				var detailedData={
+					dataOf: 'user',
+					monthlyData: [ [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0] ],
+					weeklyData: [ [0,0,0,0,0,0,0], [0,0,0,0,0,0,0] ],
+					hourlyData: [ [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] ]
+				}
+				
+				for(var i=0; i<monthly.length;++i){
+					detailedData.monthlyData[monthly[i].Response][monthly[i].Month-1]=monthly[i].NumResponse
+				}
+				for(var i=0; i<weekly.length;++i){
+					detailedData.weeklyData[weekly[i].Response][weekly[i].WeekDay]=weekly[i].NumResponse
+				}
+				for(var i=0; i<hourly.length;++i){
+					detailedData.hourlyData[hourly[i].Response][hourly[i].Hour]=hourly[i].NumResponse
+				}
+				
+				return detailedData;
+			}
+			,function(error){
+				return error
+			})
+		}
+		return DetailedDataService.userDetailedPromise
+	}
+	
+	DetailedDataService.getWorldData=function(){
+		if(DetailedDataService.worldDetailedPromise===null){
+			DetailedDataService.worldDetailedPromise=$http.get('/detailedscr',{params : {'dataOf' : 'world'}})
+			.then(function(res){
+				var monthly = res.data.detailedData.monthlyData
+				var weekly = res.data.detailedData.weeklyData
+				var hourly = res.data.detailedData.hourlyData
+				var detailedData={
+					dataOf: 'world',
+					monthlyData: [ [0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0] ],
+					weeklyData: [ [0,0,0,0,0,0,0], [0,0,0,0,0,0,0] ],
+					hourlyData: [ [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] ]
+				}
+				
+				for(var i=0; i<monthly.length;++i){
+					detailedData.monthlyData[monthly[i].Response][monthly[i].Month-1]=monthly[i].NumResponse
+				}
+				for(var i=0; i<weekly.length;++i){
+					detailedData.weeklyData[weekly[i].Response][weekly[i].WeekDay]=weekly[i].NumResponse
+				}
+				for(var i=0; i<hourly.length;++i){
+					detailedData.hourlyData[hourly[i].Response][hourly[i].Hour]=hourly[i].NumResponse
+				}
+				
+				return detailedData;
+			}
+			,function(error){
+				return error
+			})
+		}
+		return DetailedDataService.worldDetailedPromise
+	}
+	
 });

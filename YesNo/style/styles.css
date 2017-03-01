@@ -97,7 +97,7 @@ body{
 	font-size: 85px;
 	-webkit-box-shadow: 0px 0px 30px 4px #aaa, inset 0px 0px 5px 1px #111;
 	-moz-box-shadow: 0px 0px 30px 4px #aaa, inset 0px 0px 5px 1px #111;
-	box-shadow: 0px 0px 30px 4px #aaa, inset 0px 0px 5px 1px #111;
+	box-shadow: 0px 0px 30px 4px #aaa, inset 0px 0px 15px 1px #111;
 }
 
 .response-box-yes{

@@ -1,22 +1,22 @@
 <div>
 <div class="arrow-back"><a href='#overall'>←</a></div>
-	<div class="detailed-dataof" ng-style="{'background-image': 'url(' + dataOf + ')'}"></div>
+	<div class="detailed-dataof" ng-style="{'background-image': 'url(/img/' + detailedData.dataOf + '.jpg)'}"></div>
 	<div class="detailed-month">
 		<div class="chart-title">MONTH WISE</div>
-		<canvas id="line" width="500" height="240" class="chart chart-line" chart-data="monthlyDataSource.dataset"
-		chart-labels="monthlyDataSource.labels" chart-series="monthlyDataSource.series">
+		<canvas id="line" width="500" height="240" class="chart chart-line" chart-data="detailedData.monthlyData"
+		chart-labels="months" chart-series="series">
 		</canvas>
 	</div>
 	<div class="detailed-week">
 		<div class="chart-title">DAY WISE</div>
-		<canvas id="line" width="450" height="240" class="chart chart-line" chart-data="weeklyDataSource.dataset"
-		chart-labels="weeklyDataSource.labels" chart-series="weeklyDataSource.series">
+		<canvas id="line" width="450" height="240" class="chart chart-line" chart-data="detailedData.weeklyData"
+		chart-labels="weekdays" chart-series="series">
 		</canvas>
 	</div>
 	<div class="detailed-hour">
 		<div class="chart-title">HOUR WISE</div>
-		<canvas id="line" width="1000" height="240" class="chart chart-line" chart-data="hourlyDataSource.dataset"
-		chart-labels="hourlyDataSource.labels" chart-series="hourlyDataSource.series">
+		<canvas id="line" width="1000" height="240" class="chart chart-line" chart-data="detailedData.hourlyData"
+		chart-labels="hours" chart-series="series">
 		</canvas>
 	</div>
 	<div class="chart-legend">
