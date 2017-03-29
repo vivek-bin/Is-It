@@ -1,9 +1,9 @@
 {
-  "name": "node-IsIt",
+  "name": "Is-It",
   "version": "0.0.1",
   "description": "User response recording and analysing App",
   "main": "server.js",
-  "author": "vivek",
+  "author": "vivek-bin",
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
