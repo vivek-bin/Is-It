@@ -1,0 +1,13 @@
+{
+  "name": "node-IsIt",
+  "version": "0.0.1",
+  "description": "User response recording and analysing App",
+  "main": "server.js",
+  "author": "vivek",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "mysql": "^2.13.0",
+    "cookie-parser": "^1.4.3"
+  }
+}
