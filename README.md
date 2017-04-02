@@ -2,8 +2,8 @@
 
 This is a simple web app built with -
  - AngularJS used for the frontend
- - Express.Js framework for Node.JS for backend
- - MySQL to store relational data
+ - Express.Js framework used for the backend
+ - MySQL(v5.7.17) to store responses
 
 The app records user responses, and then presents the overall responses graphically.
 
@@ -31,16 +31,19 @@ The app records user responses, and then presents the overall responses graphica
 3. Start the server: `node server.js`
 4. View in browser at `http://localhost:8081`
 
+(see 'To Do' if running for the first time)
+
 
 ## To Do
 
  - Currently, need to create response table manually at the beginning
  ```
 	 CREATE TABLE userresponses (
-     Resp_Date DATE
+     	 Resp_Date DATE
 		,Resp_Time TIME
 		,User_ID INT
 		,User_Country CHAR(2)
-		,Response INT
+		,Response TINYINT
 		,PRIMARY KEY(Resp_Date,Resp_Time,User_ID,User_Country);
 ```
+
