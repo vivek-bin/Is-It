@@ -1,3 +1,5 @@
+![Fancy](screenshots/g.gif?raw=true "Fancy")
+
 # Is-It
 
 This is a simple web app built with -
@@ -47,3 +49,8 @@ The app records user responses, and then presents the overall responses graphica
 		,PRIMARY KEY(Resp_Date,Resp_Time,User_ID,User_Country);
 ```
 
+![](screenshots/s1.jpg?raw=true)
+
+![](screenshots/s2.jpg?raw=true)
+
+![](screenshots/s3.jpg?raw=true)
